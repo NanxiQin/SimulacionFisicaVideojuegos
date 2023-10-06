@@ -10,6 +10,7 @@ public:
 	Particle(ParticleProperties properties);
 	virtual ~Particle();
 	virtual void update(double t)override;
+	void die()override;
 protected:
 	Vector3 vel;
 	Vector3 acceleration;
@@ -23,6 +24,5 @@ protected:
 	double mass;
 	double invMass;
 
-	void die();
 };
 

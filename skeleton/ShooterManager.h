@@ -1,16 +1,22 @@
 #pragma once
-#include "Scene.h"
-class ShooterManager
+//#include "Scene.h"
+#include "System.h"
+
+
+class ShooterManager :public System
 {
-private:
+protected:
 	int numProjectiles;
 	void shoot(ProjectileType type);
 	double shoot_elapsedTime;
-	Scene* scene;
+	//Scene* scene;
 	bool shootEnable;
+	vector<Entity*>* grp_PROJECTILES;
 public:
-	ShooterManager(Scene* scene);
-	void update(double t);
-	void keyPress(unsigned char key, const PxTransform& camera);
+	constexpr static sysId id = _sys_SHOOTER;
+	ShooterManager();
+	void initSystem() override;
+	void update(double t)override;
+	void keyPress(unsigned char key)override;
 };
 

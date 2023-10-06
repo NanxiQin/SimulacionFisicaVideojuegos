@@ -11,7 +11,8 @@ void Particle::update(double t) {
 	trans.p += vel * t; //multiplicar por t para no depender del deltaTime
 	vel += acceleration * t; //incrementar velocidad según aceleración
 	vel *= powf(damping, t); //limitar la velocidad
-	if (elapsedTime < lifeTime)
+	
+if (elapsedTime < lifeTime)
 		elapsedTime += t;
 	else die();
 }

@@ -1,6 +1,6 @@
 #include "ShooterManager.h"
-
-ShooterManager::ShooterManager(Scene* scene) : numProjectiles(0), scene(scene), shoot_elapsedTime(0), shootEnable(true) {}
+#include "Manager.h"
+ShooterManager::ShooterManager() : numProjectiles(0), shoot_elapsedTime(0), shootEnable(true) {}
 
 void ShooterManager::update(double t) {
 	if (!shootEnable) {
@@ -16,12 +16,21 @@ void ShooterManager::shoot(ProjectileType type) {
 		ProjectileInitProperties prop = particleProperties[type]; //coge las propiedades del proyectil según su tipo
 		Vector3 v = GetCamera()->getDir() * Vector3(prop.velocity, prop.velocity + prop.vertical_v, prop.velocity); //orientation normalizado
 		++numProjectiles;
-		scene->addEntity(new Particle({ GetCamera()->getEye(),v,prop.acceleration,prop.damping,prop.mass,colorRGB[prop.color] }));
+		mngr_->addEntity(_grp_PROJECTILES);
+		//scene->addEntity(new Particle({ GetCamera()->getEye(),v,prop.acceleration,prop.damping,prop.mass,colorRGB[prop.color] }));
 
 	}
 }
 
-void ShooterManager::keyPress(unsigned char key, const PxTransform& camera) {
+void ShooterManager::initSystem() {
+	
+	grp_PROJECTILES = mngr_->getGroup(_grp_PROJECTILES);
+	
+
+
+}
+
+void ShooterManager::keyPress(unsigned char key) {
 	switch (key)
 	{
 	case shoot_Pistol:

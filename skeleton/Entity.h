@@ -2,15 +2,23 @@
 #include "core.hpp"
 #include "RenderUtils.hpp"
 #include "game_def.h"
+class Manager;
 
 using namespace physx;
 using namespace game_def;
 class Entity
 {
-public:
-	virtual void update(double t) = 0;
-	virtual ~Entity() {};
 protected:
-	Entity() {};
+	bool alive_;
+	Manager* mngr_;
+public:
+	Entity();
+	virtual void update(double t) {};
+	virtual ~Entity() { die(); };
+
+	inline void setContext(Manager* mngr) { mngr_ = mngr; };
+	inline bool isAlive() { return alive_; }
+	inline void setAlive(bool alive) { alive_ = alive; }
+	virtual inline void die() {  }
 };
 

@@ -25,6 +25,12 @@
     <ClCompile Include="Scene.cpp">
       <Filter>Structure</Filter>
     </ClCompile>
+    <ClCompile Include="Manager.cpp">
+      <Filter>Structure</Filter>
+    </ClCompile>
+    <ClCompile Include="System.cpp">
+      <Filter>Structure</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Render\Camera.h">
@@ -55,6 +61,12 @@
       <Filter>Structure</Filter>
     </ClInclude>
     <ClInclude Include="Scene.h">
+      <Filter>Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="Manager.h">
+      <Filter>Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="System.h">
       <Filter>Structure</Filter>
     </ClInclude>
   </ItemGroup>

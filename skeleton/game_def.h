@@ -54,4 +54,32 @@ namespace game_def {
 	const double PROJECTILE_LIFETIME = 5; //in seg
 
 	const double SHOOT_CD = 0.5; //in seg
+
+
+	using hdlrId_type = unsigned int;
+	enum hdlrId : hdlrId_type
+	{
+		_hdlr_EXAMPLE1,
+		_LAST_HDLR_ID
+	};
+	constexpr hdlrId_type maxHdlrId = _LAST_HDLR_ID;
+
+	using grpId_type = unsigned int;
+	enum grpId : grpId_type {
+		_grp_GENERAL,
+		_grp_PROJECTILES,
+		_grp_PARTICLES, //a cambiar
+		_LAST_GRP_ID
+	};
+	constexpr grpId_type maxGroupId = _LAST_GRP_ID;
+
+	using sysId_type = unsigned int;
+	enum sysId : sysId_type {
+		_sys_SHOOTER = 0,
+		_sys_PARTICLE,
+	
+		// do not remove this
+		_LAST_SYS_ID
+	};
+	constexpr sysId_type maxSystemId = _LAST_SYS_ID;
 }
