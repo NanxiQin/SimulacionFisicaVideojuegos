@@ -10,9 +10,6 @@ private:
 
 public:
 	PlayScene();
-	~PlayScene();
-	void update(double t)override;
-	void keyPress(unsigned char key, const PxTransform& camera)override;
 
 };
 

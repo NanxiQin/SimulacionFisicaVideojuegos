@@ -1,12 +1,11 @@
 #pragma once
-#include "Scene.h"
-class ShooterManager
-{
+#include "System.h"
+#include "Particle.h"
+class ShooterManager :public System {
 private:
 	int numProjectiles;
 	void shoot(ProjectileType type);
 	double shoot_elapsedTime;
-	Scene* scene;
 	bool shootEnable;
 public:
 	ShooterManager(Scene* scene);

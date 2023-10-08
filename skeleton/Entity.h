@@ -7,10 +7,14 @@ using namespace physx;
 using namespace game_def;
 class Entity
 {
-public:
-	virtual void update(double t) = 0;
-	virtual ~Entity() {};
 protected:
-	Entity() {};
+	Entity():alive(true) {};
+	bool alive;
+public:
+	virtual ~Entity() {};
+	virtual void update(double t) = 0;
+	virtual void die() {};
+	inline void setAlive(bool alive_) { alive = alive_; }
+	inline bool isAlive() { return alive; }
 };
 

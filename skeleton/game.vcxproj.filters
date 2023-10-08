@@ -10,7 +10,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="callbacks.cpp" />
     <ClCompile Include="ShooterManager.cpp">
-      <Filter>Manager</Filter>
+      <Filter>Systems</Filter>
     </ClCompile>
     <ClCompile Include="PlayScene.cpp">
       <Filter>Scene</Filter>
@@ -25,6 +25,14 @@
     <ClCompile Include="Scene.cpp">
       <Filter>Structure</Filter>
     </ClCompile>
+    <ClCompile Include="ParticleSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="System.cpp">
+      <Filter>Structure</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleGenerator.cpp" />
+    <ClCompile Include="Firework.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Render\Camera.h">
@@ -36,7 +44,7 @@
     <ClInclude Include="callbacks.hpp" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="ShooterManager.h">
-      <Filter>Manager</Filter>
+      <Filter>Systems</Filter>
     </ClInclude>
     <ClInclude Include="PlayScene.h">
       <Filter>Scene</Filter>
@@ -57,13 +65,18 @@
     <ClInclude Include="Scene.h">
       <Filter>Structure</Filter>
     </ClInclude>
+    <ClInclude Include="ParticleSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="System.h">
+      <Filter>Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleGenerator.h" />
+    <ClInclude Include="Firework.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">
       <UniqueIdentifier>{d04b4f9f-5a69-465e-8070-25c6d0bcd3c2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Manager">
-      <UniqueIdentifier>{9077abd3-da82-41fd-af2c-771c49a93e37}</UniqueIdentifier>
     </Filter>
     <Filter Include="Scene">
       <UniqueIdentifier>{5810a085-ccfb-41cf-a100-c3af6c1ef96b}</UniqueIdentifier>
@@ -73,6 +86,9 @@
     </Filter>
     <Filter Include="Structure">
       <UniqueIdentifier>{0b0c8f0b-9099-43d3-942a-b0d9a00d2f65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems">
+      <UniqueIdentifier>{9077abd3-da82-41fd-af2c-771c49a93e37}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,7 @@
 #pragma once
 #include "PxPhysicsAPI.h"
 #include "core.hpp"
+using namespace physx;
 namespace game_def {
 	enum Color { Red, Orange, Yellow, Green, Blue, Purple, Pink, Brown, Black, White, Grey, COLOR_SIZE };
 	static Vector4 colorRGB[COLOR_SIZE]{
@@ -26,12 +27,14 @@ namespace game_def {
 	};
 
 	struct ParticleProperties {
-		Vector3 trans;
+		PxTransform transform;
 		Vector3 vel; //m/s
 		Vector3 acceleration;
 		double damping;
 		double mass; //kg
 		Vector4 color;
+		double lifeTime;
+		double elapsedTime=0;
 		ProjectileType type = NONE;
 	};
 
@@ -44,6 +47,8 @@ namespace game_def {
 		Color color;
 	};
 
+
+
 	static ProjectileInitProperties particleProperties[NONE]{
 		{35,0,{0, -1, 0},0.99,0.5,Purple},
 		{40,30,{0, -20, 0},0.99,5,Black},
@@ -51,7 +56,8 @@ namespace game_def {
 		{100,0,{0,0, 0},0.99,0.1,Blue} //No gravity
 	};
 
-	const double PROJECTILE_LIFETIME = 5; //in seg
+	const double PROJECTILE_LIFETIME = 5.0; //in seg
 
 	const double SHOOT_CD = 0.5; //in seg
+	const double PARTICLE_BOUND_DISTANCE = 50.0; //in seg
 }

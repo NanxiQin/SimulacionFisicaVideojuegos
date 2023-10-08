@@ -1,18 +1,16 @@
 #include "Scene.h"
 
 Scene::~Scene() {
-	for (auto e : entities) delete e;
+	for (auto s : systems)delete s;
+	systems.clear();
 }
 void Scene::update(double t) {
+	for (auto s : systems)s->update(t);
 
-	auto it = entities.begin();
-	while (it != entities.end()) {
-		auto itAux = it; //hacerlo con un iterador auxiliar, por si se invalida durante el bucle (por borrarlo)
-		++it;
-		(*itAux)->update(t);
-	}
 }
-
-void Scene::addEntity(Entity* e) {
-	entities.push_back(e);
+void Scene::addSystem(System* s) {
+	systems.push_back(s);
 }
+void Scene::keyPress(unsigned char key, const PxTransform& camera) {
+	for (auto s : systems)s->keyPress(key,camera);
+ }
