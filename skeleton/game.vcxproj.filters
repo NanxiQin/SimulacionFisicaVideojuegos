@@ -33,6 +33,9 @@
     </ClCompile>
     <ClCompile Include="ParticleGenerator.cpp" />
     <ClCompile Include="Firework.cpp" />
+    <ClCompile Include="SimpleParticleGenerator.cpp" />
+    <ClCompile Include="GaussianParticleGenerator.cpp" />
+    <ClCompile Include="FireworkGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Render\Camera.h">
@@ -73,6 +76,9 @@
     </ClInclude>
     <ClInclude Include="ParticleGenerator.h" />
     <ClInclude Include="Firework.h" />
+    <ClInclude Include="SimpleParticleGenerator.h" />
+    <ClInclude Include="GaussianParticleGenerator.h" />
+    <ClInclude Include="FireworkGenerator.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">

@@ -9,12 +9,12 @@ void ShooterManager::update(double t) {
 		shootEnable= shoot_elapsedTime > SHOOT_CD;
 	}
 }
-void ShooterManager::shoot(ProjectileType type) {
+void ShooterManager::shoot(ParticleType type) {
 	if (shootEnable) {
 		shootEnable = false;
 		shoot_elapsedTime = 0;
 
-		ProjectileInitProperties prop = particleProperties[type]; //coge las propiedades del proyectil según su tipo
+		ProjectileInitProperties prop = projectileProperties[type]; //coge las propiedades del proyectil según su tipo
 		Vector3 v = GetCamera()->getDir() * Vector3(prop.velocity, prop.velocity + prop.vertical_v, prop.velocity); //orientation normalizado
 		++numProjectiles;
 		addEntity(new Particle({ PxTransform(GetCamera()->getEye()),v,prop.acceleration,prop.damping,prop.mass,colorRGB[prop.color],PROJECTILE_LIFETIME,0,type }));

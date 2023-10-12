@@ -11,9 +11,7 @@ public:
 	virtual Particle* clone() const;
 
 protected:
-	// Type
-	unsigned _type;
-	list<shared_ptr<ParticleGenerator> > _gens;
+	list<shared_ptr<ParticleGenerator> > gens;
 };
 
 

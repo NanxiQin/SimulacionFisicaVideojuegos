@@ -20,6 +20,7 @@ public:
 	void setLifeTime(double lifeTime_) { lifeTime = lifeTime_; }
 
 	virtual Particle* clone()const;
+	void die() override;
 protected:
 	Vector3 vel;
 	Vector3 acceleration;
@@ -30,10 +31,9 @@ protected:
 	RenderItem* renderItem;
 	Vector4 color;
 
-	ProjectileType type;
+	ParticleType type;
 	double mass;
 	double invMass;
 
-	void die() override;
 };
 

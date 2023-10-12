@@ -256,6 +256,8 @@
     <ClCompile Include="callbacks.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Firework.cpp" />
+    <ClCompile Include="FireworkGenerator.cpp" />
+    <ClCompile Include="GaussianParticleGenerator.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Particle.cpp" />
     <ClCompile Include="ParticleGenerator.cpp" />
@@ -266,6 +268,7 @@
     <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="ShooterManager.cpp" />
+    <ClCompile Include="SimpleParticleGenerator.cpp" />
     <ClCompile Include="System.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -273,7 +276,9 @@
     <ClInclude Include="core.hpp" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Firework.h" />
+    <ClInclude Include="FireworkGenerator.h" />
     <ClInclude Include="game_def.h" />
+    <ClInclude Include="GaussianParticleGenerator.h" />
     <ClInclude Include="Particle.h" />
     <ClInclude Include="ParticleGenerator.h" />
     <ClInclude Include="ParticleSystem.h" />
@@ -284,6 +289,7 @@
     <ClInclude Include="PlayScene.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="ShooterManager.h" />
+    <ClInclude Include="SimpleParticleGenerator.h" />
     <ClInclude Include="System.h" />
   </ItemGroup>
   <ItemGroup>

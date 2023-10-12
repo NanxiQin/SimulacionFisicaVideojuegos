@@ -4,7 +4,7 @@
 class ShooterManager :public System {
 private:
 	int numProjectiles;
-	void shoot(ProjectileType type);
+	void shoot(ParticleType type);
 	double shoot_elapsedTime;
 	bool shootEnable;
 public:
