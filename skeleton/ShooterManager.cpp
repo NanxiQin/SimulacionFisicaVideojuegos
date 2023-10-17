@@ -14,10 +14,11 @@ void ShooterManager::shoot(ParticleType type) {
 		shootEnable = false;
 		shoot_elapsedTime = 0;
 
-		ProjectileInitProperties prop = projectileProperties[type]; //coge las propiedades del proyectil según su tipo
-		Vector3 v = GetCamera()->getDir() * Vector3(prop.velocity, prop.velocity + prop.vertical_v, prop.velocity); //orientation normalizado
+		ParticleProperties prop = particleProperties[type]; //coge las propiedades del proyectil según su tipo
+		prop.vel = GetCamera()->getDir() * prop.vel; //orientation normalizado
+		prop.transform = PxTransform(GetCamera()->getEye()); //orientation normalizado
 		++numProjectiles;
-		addEntity(new Particle({ PxTransform(GetCamera()->getEye()),v,prop.acceleration,prop.damping,prop.mass,colorRGB[prop.color],PROJECTILE_LIFETIME,0,type }));
+		addEntity(new Particle(prop));
 
 	}
 }

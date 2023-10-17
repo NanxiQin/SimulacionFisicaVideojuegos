@@ -8,31 +8,29 @@ class Particle:public Entity
 public:
 	
 	Particle(ParticleProperties properties);
+	ParticleProperties prop;
 	virtual ~Particle();
 	virtual void update(double t)override;
 	
 	//void setPosition(Vector3 position) { trans.p = position; };
 
-	inline Vector3& getPos() { return trans.p; };
-	inline PxQuat& getRot() { return trans.q; };
-	inline Vector3& getVel() { return vel; };
+	inline Vector3& getPos() { return prop.transform.p; };
+	inline PxQuat& getRot() { return prop.transform.q; };
+	inline Vector3& getVel() { return prop.vel; };
+	inline ParticleType getType() { return prop.type; };
 
-	void setLifeTime(double lifeTime_) { lifeTime = lifeTime_; }
+	void setLifeTime(double lifeTime_) { prop.lifeTime = lifeTime_; }
+	
+	ParticleProperties getProp();
 
-	virtual Particle* clone()const;
 	void die() override;
-protected:
-	Vector3 vel;
-	Vector3 acceleration;
-	const double damping;
-	double lifeTime;
-	double elapsedTime;
-	PxTransform trans; //contiene pos y orientación
-	RenderItem* renderItem;
-	Vector4 color;
 
-	ParticleType type;
-	double mass;
+	//DUDA: A BORRAR
+	/*virtual Particle* clone()const;*/
+
+protected:
+
+	RenderItem* renderItem;
 	double invMass;
 
 };

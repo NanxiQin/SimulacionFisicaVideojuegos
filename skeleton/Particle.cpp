@@ -1,24 +1,28 @@
 #include "Particle.h"
 
-Particle::Particle(ParticleProperties properties) :
-	vel(properties.vel), trans(properties.transform), acceleration(properties.acceleration), damping(properties.damping), elapsedTime(0), lifeTime(PROJECTILE_LIFETIME), type(properties.type), mass(properties.mass), invMass(mass),color(properties.color),
-	renderItem(new RenderItem(CreateShape(PxSphereGeometry(properties.mass)), &trans, properties.color)){}
+Particle::Particle(ParticleProperties properties) : prop(properties), invMass(1/properties.mass),
+	renderItem(new RenderItem(CreateShape(PxSphereGeometry(properties.mass)), &prop.transform, properties.color)){}
 
 Particle::~Particle() {
 	die();
 }
 void Particle::update(double t) {
-	trans.p += vel * t; //multiplicar por t para no depender del deltaTime
-	vel += acceleration * t; //incrementar velocidad según aceleración
-	vel *= powf(damping, t); //limitar la velocidad
-	if (elapsedTime < lifeTime)
-		elapsedTime += t;
+	prop.transform.p += prop.vel * t; //multiplicar por t para no depender del deltaTime
+	prop.vel += prop.acceleration * t; //incrementar velocidad según aceleración
+	prop.vel *= powf(prop.damping, t); //limitar la velocidad
+	if (prop.elapsedTime < prop.lifeTime)
+		prop.elapsedTime += t;
 	else alive=false;
 }
 
-Particle* Particle::clone() const
+//Particle* Particle::clone() const
+//{
+//	return new Particle(prop);
+//}
+
+ParticleProperties Particle::getProp()
 {
-	return new Particle({trans,vel,acceleration,damping,mass,color,lifeTime,elapsedTime,type });
+	return prop;
 }
 
 void Particle::die() {

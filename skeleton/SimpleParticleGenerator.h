@@ -4,10 +4,11 @@
 class SimpleParticleGenerator:public ParticleGenerator
 {
 public:
-	SimpleParticleGenerator(ParticleProperties modelParticle, Vector3 originOffset = { 0,0,0 } , double min= UNIFORM_MIN, double max= UNIFORM_MAX);
+	SimpleParticleGenerator(GeneratorEffectProperties prop);
 	list<Particle*>generateParticles() override;
 private:
-	uniform_real_distribution<double> uniform_dis;
-	double mass;
+	uniform_real_distribution<double> uniform_x;
+	uniform_real_distribution<double> uniform_y;
+	uniform_real_distribution<double> uniform_z;
 };
 

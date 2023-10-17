@@ -1,7 +1,10 @@
 #include "SimpleParticleGenerator.h"
 #include <random> 
-SimpleParticleGenerator::SimpleParticleGenerator(ParticleProperties modelParticle, Vector3 originOffset = { 0,0,0 }, double min, double max) :
-	ParticleGenerator(modelParticle, originOffset), uniform_dis(uniform_real_distribution<double>{ min, max }) {}
+SimpleParticleGenerator::SimpleParticleGenerator(GeneratorEffectProperties prop) :
+	ParticleGenerator(prop.model, prop.originOffset),
+	uniform_x(uniform_real_distribution<double>{ prop.distribution.x.first, prop.distribution.x.second }),
+	uniform_y(uniform_real_distribution<double>{ prop.distribution.y.first, prop.distribution.y.second }),
+	uniform_z(uniform_real_distribution<double>{ prop.distribution.z.first, prop.distribution.z.second }) {}
 
 list<Particle*> SimpleParticleGenerator::generateParticles()
 {
@@ -9,8 +12,10 @@ list<Particle*> SimpleParticleGenerator::generateParticles()
 	if (checkGenerationProb()) //generar según prob
 		//int color = rand() % COLOR_SIZE;
 		for (int i = 0; i < _n_particles; ++i) {
-			Vector3 v = Vector3(uniform_dis(mt), uniform_dis(mt), uniform_dis(mt)) * _mean_velocity;
-			list.push_back(new Particle({ PxTransform(_origin),v,Vector3(0,GRAVITY,0),DEFAULT_DAMPING,mass,colorRGB[Orange],UNIFORM_LIFETIME }));
+			ParticleProperties aux = modelParticleProp; //copia de las prop
+			aux.transform.p = generateRandomPos(modelParticleProp.transform.p);
+			aux.vel = Vector3(uniform_x(mt), uniform_y(mt), uniform_z(mt)) * _mean_velocity;
+			list.push_back(new Particle(aux));
 		}
 	return list;
 }
