@@ -50,6 +50,7 @@ public:
 		}
 	}
 
+	void setColor(Vector4 c) { color = c; }
 public:
 	physx::PxShape* shape;
 	const physx::PxTransform* transform;

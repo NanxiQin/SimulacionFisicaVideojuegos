@@ -2,12 +2,12 @@
 #include <iostream>
 ParticleSystem::ParticleSystem(Scene* scene, const Vector3& g) :System(scene), gravity(g)
 {
-	/*createGenerator<SimpleParticleGenerator>(Default,{-50,0,0});*/
-	//createGenerator<GaussianParticleGenerator>(Default,{50,0,0},Blue);
-	//createGenerator<SimpleParticleGenerator>(FogEffect);
-	//createGenerator<SimpleParticleGenerator>(HoseEffect);
-	//createGenerator<GaussianParticleGenerator>(MilkyWayEffect);
-	generateFirework();
+	/*createGenerator<SimpleParticleGenerator>(true,Default,{-50,0,0});*/
+	//createGenerator<GaussianParticleGenerator>(true,Default,{50,0,0},Blue);
+	//createGenerator<SimpleParticleGenerator>(true,FogEffect);
+	//createGenerator<SimpleParticleGenerator>(true,HoseEffect);
+	//createGenerator<GaussianParticleGenerator>(true,MilkyWayEffect);
+	initFirework();
 }
 
 ParticleSystem::~ParticleSystem()
@@ -17,7 +17,7 @@ ParticleSystem::~ParticleSystem()
 	while (it != particles.end()) {
 		auto particle = *it; //hacerlo con un iterador auxiliar, por si se invalida durante el bucle (por borrarlo)
 		++it;
-		particle->die();
+		delete particle;
 	}
 
 	for (auto g : particleGenerators)
@@ -43,8 +43,7 @@ void ParticleSystem::update(double t)
 		if (isOutOfBounds(particle->getPos())) particle->setAlive(false);
 	}
 
-	//for (auto i : particleNum) cout << i << " ";
-	//cout << endl;
+	
 }
 
 void ParticleSystem::refresh()
@@ -78,39 +77,61 @@ void ParticleSystem::refresh()
 
 void ParticleSystem::keyPress(unsigned char key, const PxTransform& camera)
 {
-	for (auto g : particleGenerators) g->keyPress(key);
+	//DUDA: A BORRAR
+	//for (auto g : particleGenerators) g->keyPress(key);
+	switch (key)
+	{
+	case shoot_Firework:
+		generateFirework();
+		break;
+	default:
+		break;
+	}
+		
+
 }
 
 void ParticleSystem::generateFirework()
 {
-	firework_generator = new SimpleParticleGenerator(generatorEffect[FireworkEffect]);
-	Firework* f = new Firework(particleProperties[FIREWORK], firework_generator);
+	Firework* f = new Firework(particleProperties[FIREWORK], firework_generator,0);
+	f->getVel() = f->getVel()* GetCamera()->getDir();
+	f->getPos() = GetCamera()->getEye();
 	addParticles({ f });
+}
+
+void ParticleSystem::initFirework()
+{
+	firework_generator = createGenerator<SimpleParticleGenerator>(false, FireworkEffect);
+	firework_generator->setNParticles(5);
 }
 
 void ParticleSystem::addParticles(list<Particle*> particlesList)
 {
 	for (auto p : particlesList) {
 		particles.push_back(p);
-		//++particleNum[p->getType()];
+		++particleNum[p->getType()];
 	}
+	for (auto i : particleNum) cout << i << " ";
+	cout << endl;
 }
 
 void ParticleSystem::onParticleDeath(Particle* p) {
-	//--particleNum[p->getType()];
+	--particleNum[p->getType()];
 	if (p->getType() == FIREWORK) {
 		Firework* f = static_cast<Firework*>(p);
 		auto l=f->explode();
-		for (auto newP : l) {
-			particles.push_back(newP);
+		for (Particle* newP : l) {
 			Firework* aux= static_cast<Firework*>(newP);
 			aux->addGenerator(firework_generator);
-			cout << f->getNGen() << endl;
-			//aux->setNGen(f->getNGen()+1);
-			//++particleNum[newP->getType()];
-
+			aux->setNGen(f->getNGen()+1);
+			cout << aux->getNGen() << endl;
+			particles.push_back(aux);
+			++particleNum[newP->getType()];
+			
 		}
 	}
+	for (auto i : particleNum) cout << i << " ";
+	cout << endl;
 	//addParticles(static_cast<Firework*>(p)->explode());
 
 }

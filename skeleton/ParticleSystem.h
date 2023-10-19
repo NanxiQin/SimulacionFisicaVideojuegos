@@ -17,6 +17,7 @@ public:
 
 	// Method to generate a Firework with the appropiate type
 	void generateFirework();
+	void initFirework();
 
 	// Gets a particle generator with name...
 	//ParticleGenerator* getParticleGenerator(const std::string& n);
@@ -40,7 +41,7 @@ protected:
 
 
 	template<class T>
-	inline T* createGenerator(GeneratorEffectType type = Default, Vector3 pos = { 0,0,0 }, Color color = COLOR_SIZE, DistributionProp distribution = generatorEffect[Default].distribution) {
+	inline T* createGenerator(bool addTolist,GeneratorEffectType type = Default, Vector3 pos = { 0,0,0 }, Color color = COLOR_SIZE, DistributionProp distribution = generatorEffect[Default].distribution) {
 		GeneratorEffectProperties g = generatorEffect[type];
 		
 		if (color != COLOR_SIZE)  g.model.color =colorRGB[color];
@@ -52,6 +53,7 @@ protected:
 			conversionUniformToGaussian(g.distribution);
 		}
 		auto gen = new T(g);
+		if(addTolist)
 		particleGenerators.push_back(gen);
 		return gen;
 	}

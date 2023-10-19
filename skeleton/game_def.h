@@ -9,7 +9,8 @@ namespace game_def {
 		shoot_Pistol = 'v',
 		shoot_Artillery = 'b',
 		shoot_Fireball = 'n',
-		shoot_Laser = 'm'
+		shoot_Laser = 'm',
+		shoot_Firework = 'f'
 	};
 
 #pragma region color
@@ -18,7 +19,7 @@ namespace game_def {
 		{1,0,0,1}, //Red
 		{0.7,0.3,0,1}, //Orange
 		{0.7,0.6,0,3}, //Yellow
-		{0.3,0.4,0,1}, //Green
+		{0.6,0.7,0,4}, //Green
 		{0.5,0.5,0.9,1}, //Blue
 		{0.5,0.2,0.5,1}, //Purple
 		{0.6, 0.3, 0.3, 1}, //Pink
@@ -61,8 +62,7 @@ namespace game_def {
 		{PxTransform(0,0,0),{ 40,70,40 },{0,-20,0},0.99,5,colorRGB[Black],DEFAULT_LIFETIME,0,ARTILLERY},
 		{PxTransform(0,0,0),{ 10,10,10 },{0,4,0},0.9,2,colorRGB[Orange],DEFAULT_LIFETIME,0,FIREBALL},
 		{PxTransform(0,0,0),{ 100,100,100 },{0,0,0},0.99,0.1,colorRGB[Blue],DEFAULT_LIFETIME,0,LASER},//No gravity
-		{PxTransform(0,0,0),{ 0,40,0 },{0,GRAVITY,0},0.99,1,colorRGB[Red],DEFAULT_LIFETIME,0,FIREWORK},//No gravity
-	
+		{PxTransform(0,0,0),{ 2,100,2 },{0,GRAVITY,0},0.99,0.5,colorRGB[White],2,0,FIREWORK},//No gravity
 	};
 
 #pragma endregion
@@ -91,17 +91,18 @@ namespace game_def {
 		ParticleProperties model;
 		Vector3 originOffset = { 0,0,0 };
 		DistributionProp distribution;
+		double minLifeTime, maxLifeTime;
 	};
 
 	static GeneratorEffectProperties generatorEffect[GeneratorEffect_SIZE]{
-		{particleProperties[NONE],{ 10,10,10 }, {{-5,5},{-5,5},{-5,5}}},
-		{{PxTransform(0,0,0),{5,30,1 },{0,-20,0}, DEFAULT_DAMPING,DEFAULT_MASS,colorRGB[Blue],DEFAULT_LIFETIME,0,NONE},{ 0,0,0 },{{5,10},{1.0,1.5},{-2,2}}},
-		{{PxTransform(0,0,0),{ 0.5,0.5,0.5 },{0,GRAVITY,0}, DEFAULT_DAMPING,DEFAULT_MASS,colorRGB[Grey],DEFAULT_LIFETIME,0,NONE},{ 100,100,100 },{{-2,2},{-2,2},{-2,2}}},
-		{{PxTransform(-40,0,0),{ 0.01,0.01,0.01 },{0,0,0}, DEFAULT_DAMPING,DEFAULT_MASS,colorRGB[Yellow],DEFAULT_LIFETIME,0,NONE},{ 200,0,50 },{{-2,2},{-2,2},{-2,2}}},
-		{particleProperties[FIREWORK],{ 0,0,0 },{ {-5,5},{1,5},{-5,5}}},
+		{particleProperties[NONE],{ 10,10,10 }, {{-5,5},{-5,5},{-5,5}},1,DEFAULT_LIFETIME},
+		{{PxTransform(0,0,0),{5,30,1 },{0,-20,0}, DEFAULT_DAMPING,DEFAULT_MASS,colorRGB[Blue],DEFAULT_LIFETIME,0,NONE},{ 0,0,0 },{{5,10},{1.0,1.5},{-2,2}},DEFAULT_LIFETIME,DEFAULT_LIFETIME},
+		{{PxTransform(0,0,0),{ 0.5,0.5,0.5 },{0,GRAVITY,0}, DEFAULT_DAMPING,DEFAULT_MASS,colorRGB[Grey],DEFAULT_LIFETIME,0,NONE},{ 100,100,100 },{{-2,2},{-2,2},{-2,2}},DEFAULT_LIFETIME,DEFAULT_LIFETIME},
+		{{PxTransform(-40,0,0),{ 0.01,0.01,0.01 },{0,0,0}, DEFAULT_DAMPING,DEFAULT_MASS,colorRGB[Yellow],DEFAULT_LIFETIME,0,NONE},{ 200,0,50 },{{-2,2},{-2,2},{-2,2}},DEFAULT_LIFETIME,DEFAULT_LIFETIME},
+		{{PxTransform(0,0,0),{ 5,20,5 },{0,-5,0},0.99,0.2,colorRGB[Blue],4,0,FIREWORK},{ 0,0,0 },{ {-3,3},{1,2},{-3,3}},1,1.5},
 	};
 
-	const int FIREWORK_MAX_GEN=2;
+	const int FIREWORK_MAX_GEN=3;
 
 #pragma endregion
 }

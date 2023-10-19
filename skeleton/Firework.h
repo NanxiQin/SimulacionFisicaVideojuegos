@@ -5,10 +5,10 @@
 class Firework :public Particle
 {
 public:
-	Firework(ParticleProperties properties, ParticleGenerator*gen=nullptr,int nGen=0):Particle(properties), gen(gen),n_gen(nGen){}
+	Firework(ParticleProperties properties, ParticleGenerator*gen=nullptr,int nGen=0,bool registerRender =true):Particle(properties,registerRender), gen(gen),n_gen(nGen){}
 	// The firework generates more fireworks when exploding --> they should be gathered by the System
 	void addGenerator(ParticleGenerator* g) { gen = g; };
-	//virtual Particle* clone() const;
+	virtual Particle* clone(bool render) const override;
 	
 	list<Particle*> explode();
 	int getNGen() const { return n_gen; }
