@@ -22,7 +22,7 @@ public:
 	inline Vector3& getVel() { return prop.vel; };
 	inline ParticleType getType() const { return prop.type; };
 
-	void setColor(Vector4 c) { prop.color = c;  if (renderItem != nullptr)renderItem->setColor(c); };
+	void setColor(Vector4 c) { prop.color = c;  if (renderItem != nullptr) renderItem->setColor(c); };
 
 	void resetElapsedTime() { prop.elapsedTime = 0; };
 	void setLifeTime(double lifeTime_) { prop.lifeTime = lifeTime_; }

@@ -16,11 +16,9 @@ public:
 	void keyPress(unsigned char key, const PxTransform& camera);
 
 	// Method to generate a Firework with the appropiate type
-	void generateFirework();
+	void generateFirework(bool randomColor);
 	void initFirework();
 
-	// Gets a particle generator with name...
-	//ParticleGenerator* getParticleGenerator(const std::string& n);
 	void addParticles(list<Particle*>particlesList);
 protected:
 	// These are the registred generators(for on demand set generation prob.to 0)
@@ -30,44 +28,38 @@ protected:
 	ParticleGenerator* firework_generator;
 	Vector3 gravity;
 
-	//std::vector<Firework*> _firework_pool;// Fireworks to be used as models!
 	//! This is used currently in the Fireworks to spread more Fireworks!
 	void onParticleDeath(Particle* p);
-	//void createFireworkSystem();
 
 	inline bool isOutOfBounds(const Vector3& pos) const {
 		return fabs(pos.x) > PARTICLE_BOUND_DISTANCE || fabs(pos.y) > PARTICLE_BOUND_DISTANCE || fabs(pos.z) > PARTICLE_BOUND_DISTANCE;
 	}
 
-
 	template<class T>
-	inline T* createGenerator(bool addTolist,GeneratorEffectType type = Default, Vector3 pos = { 0,0,0 }, Color color = COLOR_SIZE, DistributionProp distribution = generatorEffect[Default].distribution) {
+	inline T* createGenerator(bool addTolist, GeneratorEffectType type = Default, Vector3 pos = { 0,0,0 }, Color color = COLOR_SIZE, DistributionProp distribution = generatorEffect[Default].distribution) {
 		GeneratorEffectProperties g = generatorEffect[type];
-		
-		if (color != COLOR_SIZE)  g.model.color =colorRGB[color];
+
+		if (color != COLOR_SIZE)  g.model.color = colorRGB[color];
 		if (pos != Vector3(0, 0, 0)) g.model.transform = PxTransform(pos);
 		if (distribution != generatorEffect[Default].distribution) g.distribution = distribution;
 
-		if (typeid(T) == typeid(GaussianParticleGenerator))
-		{
-			conversionUniformToGaussian(g.distribution);
-		}
+		if (typeid(T) == typeid(GaussianParticleGenerator)) conversionUniformToGaussian(g.distribution);
+		
 		auto gen = new T(g);
-		if(addTolist)
-		particleGenerators.push_back(gen);
+		if (addTolist)
+			particleGenerators.push_back(gen);
 		return gen;
 	}
 	void conversionUniformToGaussian(DistributionProp& d) {
 		d.x.first = (d.x.first + d.x.second) / 2; //conversión de min a media
 		d.x.second = abs(d.x.second - d.x.first);//conversión de max a varianza
-		d.y.first = (d.y.first + d.y.second) / 2; //conversión de min a media
-		d.y.second = abs(d.y.second - d.y.first);//conversión de max a varianza
-		d.z.first = (d.z.first + d.z.second) / 2; //conversión de min a media
-		d.z.second = abs(d.z.second - d.z.first);//conversión de max a varianza
+		d.y.first = (d.y.first + d.y.second) / 2;
+		d.y.second = abs(d.y.second - d.y.first);
+		d.z.first = (d.z.first + d.z.second) / 2;
+		d.z.second = abs(d.z.second - d.z.first);
 	}
 
-
-
+	void debugNumParticle();
 };
 
 

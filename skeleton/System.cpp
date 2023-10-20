@@ -10,7 +10,6 @@ System::~System() {
 }
 void System::update(double t) {
 	refresh();
-	//std::cout << entities.size() << endl;  A BORRAR
 	auto it = entities.begin();
 	while (it != entities.end()) {
 		auto itAux = it; //hacerlo con un iterador auxiliar, por si se invalida durante el bucle (por borrarlo)

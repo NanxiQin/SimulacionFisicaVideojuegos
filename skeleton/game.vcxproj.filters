@@ -31,12 +31,17 @@
     <ClCompile Include="System.cpp">
       <Filter>Structure</Filter>
     </ClCompile>
-    <ClCompile Include="ParticleGenerator.cpp" />
-    <ClCompile Include="SimpleParticleGenerator.cpp" />
-    <ClCompile Include="GaussianParticleGenerator.cpp" />
-    <ClCompile Include="FireworkGenerator.cpp" />
     <ClCompile Include="Firework.cpp">
       <Filter>Entitites</Filter>
+    </ClCompile>
+    <ClCompile Include="game_def.cpp">
+      <Filter>Structure</Filter>
+    </ClCompile>
+    <ClCompile Include="SimpleParticleGenerator.cpp">
+      <Filter>Generators</Filter>
+    </ClCompile>
+    <ClCompile Include="GaussianParticleGenerator.cpp">
+      <Filter>Generators</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -76,12 +81,17 @@
     <ClInclude Include="System.h">
       <Filter>Structure</Filter>
     </ClInclude>
-    <ClInclude Include="ParticleGenerator.h" />
-    <ClInclude Include="SimpleParticleGenerator.h" />
-    <ClInclude Include="GaussianParticleGenerator.h" />
-    <ClInclude Include="FireworkGenerator.h" />
     <ClInclude Include="Firework.h">
       <Filter>Entitites</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleGenerator.h">
+      <Filter>Generators</Filter>
+    </ClInclude>
+    <ClInclude Include="SimpleParticleGenerator.h">
+      <Filter>Generators</Filter>
+    </ClInclude>
+    <ClInclude Include="GaussianParticleGenerator.h">
+      <Filter>Generators</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -99,6 +109,9 @@
     </Filter>
     <Filter Include="Systems">
       <UniqueIdentifier>{9077abd3-da82-41fd-af2c-771c49a93e37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generators">
+      <UniqueIdentifier>{bcefdaf5-3d69-42a1-a32b-85c8cbe31ce2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

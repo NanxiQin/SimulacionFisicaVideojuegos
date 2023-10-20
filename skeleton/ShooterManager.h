@@ -3,7 +3,6 @@
 #include "Particle.h"
 class ShooterManager :public System {
 private:
-	int numProjectiles;
 	void shoot(ParticleType type);
 	double shoot_elapsedTime;
 	bool shootEnable;

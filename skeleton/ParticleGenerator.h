@@ -5,6 +5,7 @@
 #include <list>
 #include "Particle.h"
 #include <random> 
+#include <iostream>
 using namespace std;
 using namespace game_def;
 class ParticleGenerator
@@ -18,7 +19,6 @@ protected:
 	Vector3 originOffset;
 	double minLifeTime;
 	double maxLifeTime;
-	ParticleProperties modelParticleProp;
 	//random
 	uniform_real_distribution<double> probability;
 	mt19937 mt;
@@ -26,7 +26,7 @@ protected:
 	std::string _name;
 
 	ParticleGenerator(ParticleProperties modelParticle, Vector3 originOffset = { 0,0,0 },double minLifeT=0,double maxLifeT=0) :
-		modelParticleProp(modelParticle), originOffset(originOffset), _origin(modelParticle.transform.p), _mean_velocity(modelParticle.vel), 
+		_model_particle(new Particle(modelParticle,false)), originOffset(originOffset), _origin(modelParticle.transform.p), _mean_velocity(modelParticle.vel),
 		initMeanVelocity(modelParticle.vel),initOrigin(modelParticle.transform.p),minLifeTime(minLifeT), maxLifeTime(maxLifeT)
 	{
 		if (!maxLifeTime)maxLifeTime = modelParticle.lifeTime;
@@ -35,14 +35,41 @@ protected:
 
 	};
 public:
+	 
 	~ParticleGenerator() {
 		delete _model_particle; //se asegura que no se ha borrado anteriormente, porque en al añadirlo a la lista en la generación siempre se crea uno nuevo no usado
 	}
 	virtual list<Particle*> generateParticles() = 0;
+	virtual Vector3 generateNewDistribution() = 0;
+
+	inline list<Particle*> generalParticleGeneration() {
+		list<Particle*> list;
+		if (checkGenerationProb() && !hasSurpassParticleMaxNum(_model_particle->getType())) //generar según prob
+			for (int i = 0; i < _n_particles; ++i) {
+				//prop
+				_model_particle->getPos() = generateRandomPos(_origin);
+				_model_particle->getVel() = generateNewDistribution() * (_mean_velocity);
+				setRandomLifeTime();
+
+				_model_particle->registerRender(); //se renderiza si anteriormente no se ha registrado
+				list.push_back(_model_particle);
+				
+				setParticle(_model_particle); //generar una copia del modelo ya que se ha usado para la lista
+			}
+		return list;
+	}
+
+
+	inline bool hasSurpassParticleMaxNum(ParticleType type) {
+		return particleNum[type] > particleMaxNum[type];
+	}
+
 	inline bool checkGenerationProb() {
 		return (uniform_real_distribution<double>(0, 1 - _generation_prob))(mt) == 0;
 	}
+
 	inline void setOrigin(const Vector3& p) { _origin = p; }
+
 	inline void setMeanVelocity(const Vector3& v) {
 		_mean_velocity = v;
 	}
@@ -56,13 +83,12 @@ public:
 		return initOrigin;
 	}
 	inline Vector4 getRandomColor() const {
-		return colorRGB[rand() % Pink];
+		return colorRGB[rand() % Brown];
 	}
 	inline void setColor(Vector4 c) {
 		_model_particle->setColor(c);
 	}
 	inline void setRandomColor() {
-		//modelParticleProp.color = getRandomColor();
 		_model_particle->setColor(getRandomColor());
 	}
 	inline void setRandomLifeTime() { //lifetime de la particula modelo como max
@@ -70,7 +96,6 @@ public:
 	}
 
 	inline void resetElapsedTime() {
-		//modelParticleProp.elapsedTime =0;
 		_model_particle->resetElapsedTime();
 		
 	}
@@ -81,7 +106,6 @@ public:
 		(uniform_real_distribution<float>(pos.z, pos.z + originOffset.z))(mt) };
 	}
 
-	////DUDA: A BORRAR
 	////! @brief --> sets the particle, including its type, lifetime and mean positions and velocities
 	inline void setParticle(Particle* p, bool modify_pos= false, bool modify_vel = false) {
 		if(_model_particle!=p) delete _model_particle; //para no borrar a sí mismo
@@ -93,17 +117,8 @@ public:
 			_mean_velocity = p->getVel();
 		}
 		
-		//DUDA:hacerlo que no se registre en el constructor de la particula
-		//_model_particle->getPos() = { -1000.0f, -1000.0f, -1000.0f };
 	}
 
-	/*inline void setNewParticleProp(ParticleProperties p, bool modify_pos_vel = true) {
-		modelParticleProp = p;
-		if (modify_pos_vel) {
-			_origin = p.transform.p;
-			_mean_velocity = p.vel;
-		}
-	}*/
 	inline void setNParticles(int n_p) { _n_particles = n_p; }
 	virtual void keyPress(unsigned char key) {};
 

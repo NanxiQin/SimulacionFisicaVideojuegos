@@ -7,7 +7,7 @@ public:
 	SimpleParticleGenerator(GeneratorEffectProperties prop);
 	list<Particle*>generateParticles() override;
 
-
+	Vector3 generateNewDistribution()override;
 private:
 	uniform_real_distribution<double> uniform_x;
 	uniform_real_distribution<double> uniform_y;

@@ -1,6 +1,6 @@
 #include "ShooterManager.h"
 
-ShooterManager::ShooterManager(Scene* scene) :System(scene), numProjectiles(0), shoot_elapsedTime(0), shootEnable(true) {}
+ShooterManager::ShooterManager(Scene* scene) :System(scene), shoot_elapsedTime(0), shootEnable(true) {}
 
 void ShooterManager::update(double t) {
 	System::update(t);
@@ -17,7 +17,7 @@ void ShooterManager::shoot(ParticleType type) {
 		ParticleProperties prop = particleProperties[type]; //coge las propiedades del proyectil según su tipo
 		prop.vel = GetCamera()->getDir() * prop.vel; //orientation normalizado
 		prop.transform = PxTransform(GetCamera()->getEye()); //orientation normalizado
-		++numProjectiles;
+		++particleNum[type];
 		addEntity(new Particle(prop));
 
 	}

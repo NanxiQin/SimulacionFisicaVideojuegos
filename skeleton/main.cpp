@@ -10,6 +10,9 @@
 #include "PlayScene.h"
 #include <iostream>
 
+#include <windows.h>
+
+
 std::string display_text = "This is a test";
 
 
@@ -132,6 +135,11 @@ void onCollision(physx::PxActor* actor1, physx::PxActor* actor2)
 
 int main(int, const char* const*)
 {
+	HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
+	CONSOLE_CURSOR_INFO     cursorInfo;
+	GetConsoleCursorInfo(out, &cursorInfo);
+	cursorInfo.bVisible = false; // set the cursor visibility
+	SetConsoleCursorInfo(out, &cursorInfo);
 #ifndef OFFLINE_EXECUTION 
 	extern void renderLoop();
 	renderLoop();
