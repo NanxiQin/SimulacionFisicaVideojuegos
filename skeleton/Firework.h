@@ -5,8 +5,8 @@
 class Firework :public Particle
 {
 public:
-	Firework(ParticleProperties properties, ParticleGenerator*gen=nullptr,int nGen=0,bool registerRender =true,bool setRandomColor=false):
-		Particle(properties,registerRender), gen(gen),n_gen(nGen), setRandomColor(setRandomColor){}
+	Firework(ParticleProperties properties, ParticleGenerator*gen=nullptr,int nGen=0,int maxGen= FIREWORK_MAX_GEN, bool registerRender =true,bool setRandomColor=false):
+		Particle(properties,registerRender), gen(gen),n_gen(nGen), maxGen(maxGen), setRandomColor(setRandomColor){}
 	
 	virtual Particle* clone(bool render) const override;
 	
@@ -21,6 +21,7 @@ private:
 	
 	ParticleGenerator* gen;
 	int n_gen;
+	int maxGen;
 	bool setRandomColor;
 
 };

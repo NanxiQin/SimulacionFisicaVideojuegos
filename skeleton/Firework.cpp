@@ -2,12 +2,12 @@
 
 Particle* Firework::clone(bool render) const
 {
-	return new Firework(prop,nullptr, n_gen,render,setRandomColor);
+	return new Firework(prop,nullptr, n_gen,maxGen,render,setRandomColor);
 }
 
 list<Particle*> Firework::explode()
 {
-	if (n_gen > FIREWORK_MAX_GEN ) return{};
+	if (n_gen > maxGen ) return{};
 	
 	gen->setParticle(this,true);
 	

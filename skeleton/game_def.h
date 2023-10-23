@@ -13,14 +13,15 @@ namespace game_def {
 
 		shoot_Firework1 = '1',
 		shoot_Firework2 = '2',
+		shoot_Firework3 = '3',
+		
+		add_UniformGen = '4',
+		add_GaussianGen = '5',
 
-		add_UniformGen = '3',
-		add_GaussianGen = '4',
-
-		add_HoseEffect = '5',
-		add_FogEffect = '6',
-		add_RainEffect = '7',
-		add_MilkyEffect = '8'
+		add_HoseEffect = '6',
+		add_FogEffect = '7',
+		add_RainEffect = '8',
+		add_MilkyEffect = '9'
 	};
 
 #pragma region color
@@ -109,7 +110,7 @@ namespace game_def {
 	static GeneratorEffectProperties generatorEffect[GeneratorEffect_SIZE]{
 		{particleProperties[NONE],{ 10,10,10 }, {{-5,5},{-5,5},{-5,5}},1,DEFAULT_LIFETIME},
 		{{PxTransform(0,0,0),{5,30,1 },{0,-20,0}, DEFAULT_DAMPING,1,colorRGB[Blue],DEFAULT_LIFETIME,0,NONE},{ 0,0,0 },{{5,10},{1.0,1.5},{-2,2}},DEFAULT_LIFETIME,DEFAULT_LIFETIME},
-		{{PxTransform(0,0,0),{ 0.2,0.2,0.2 },{0,0,0}, DEFAULT_DAMPING,0.2,colorRGB[Grey],DEFAULT_LIFETIME,0,NONE},{ 100,100,100 },{{-2,2},{-2,2},{-2,2}},DEFAULT_LIFETIME,DEFAULT_LIFETIME},
+		{{PxTransform(0,0,0),{ 0.1,0.1,0.1 },{0,0,0}, DEFAULT_DAMPING,0.2,colorRGB[Grey],7,0,NONE},{ 100,100,100 },{{-2,2},{-2,2},{-2,2}},DEFAULT_LIFETIME,DEFAULT_LIFETIME},
 		{{PxTransform(0,100,0),{ 0.5,0,0.5 },{0,-20,0}, DEFAULT_DAMPING,0.2,colorRGB[Blue],DEFAULT_LIFETIME,0,NONE},{ 100,0,20 },{{-2,2},{0,0},{-2,2}},DEFAULT_LIFETIME,7},
 		{{PxTransform(-40,0,0),{ 0.01,0.01,0.01 },{0,0,0}, DEFAULT_DAMPING,0.1,colorRGB[Yellow],DEFAULT_LIFETIME,0,NONE},{ 200,0,50 },{{-2,2},{-2,2},{-2,2}},DEFAULT_LIFETIME,DEFAULT_LIFETIME},
 		{{PxTransform(0,0,0),{ 5,20,5 },{0,-5,0},0.99,0.2,colorRGB[Blue],4,0,FIREWORK},{ 0,0,0 },{ {-3,3},{1,2},{-3,3}},1,1.5},

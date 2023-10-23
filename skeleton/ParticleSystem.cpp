@@ -1,9 +1,8 @@
 #include "ParticleSystem.h"
 #include <iostream>
 
-ParticleSystem::ParticleSystem(Scene* scene, const Vector3& g) :System(scene), gravity(g)
+ParticleSystem::ParticleSystem(Scene* scene, const Vector3& g) :System(scene), gravity(g), firework_generator(nullptr)
 {
-	initFirework();
 }
 
 ParticleSystem::~ParticleSystem()
@@ -57,10 +56,16 @@ void ParticleSystem::keyPress(unsigned char key, const PxTransform& camera)
 	switch (key)
 	{
 	case shoot_Firework1:
-		generateFirework(true);
+		initFirework<SimpleParticleGenerator>(1,10); 
+		generateFirework(false,3);
 		break;
 	case shoot_Firework2:
-		generateFirework(false);
+		initFirework<GaussianParticleGenerator>(0.8,5); //+gen gau
+		generateFirework(false,5);
+		break;
+	case shoot_Firework3:
+		initFirework<GaussianParticleGenerator>(0.5,5); //random -prob
+		generateFirework(true,5);
 		break;
 	case add_UniformGen:
 		createGenerator<SimpleParticleGenerator>(true, Default, { -50,0,0 }, Pink);
@@ -69,7 +74,7 @@ void ParticleSystem::keyPress(unsigned char key, const PxTransform& camera)
 		createGenerator<GaussianParticleGenerator>(true, Default, { -50,0,0 }, Green);
 		break;
 	case add_HoseEffect:
-		createGenerator<GaussianParticleGenerator>(true, HoseEffect);
+		createGenerator<SimpleParticleGenerator>(true, HoseEffect);
 		break;
 	case add_FogEffect:
 		createGenerator<GaussianParticleGenerator>(true, FogEffect);
@@ -91,15 +96,18 @@ void ParticleSystem::keyPress(unsigned char key, const PxTransform& camera)
 
 }
 
-void ParticleSystem::initFirework()
+template <typename T>
+void ParticleSystem::initFirework(double prob,int nParticle)
 {
-	firework_generator = createGenerator<GaussianParticleGenerator>(false, FireworkEffect);
-	firework_generator->setNParticles(5);
+	if (firework_generator != nullptr) delete firework_generator;
+	firework_generator = createGenerator<T>(false, FireworkEffect);
+	firework_generator->setGenProb(prob);
+	firework_generator->setNParticles(nParticle);
 }
 
-void ParticleSystem::generateFirework(bool randomColor)
+void ParticleSystem::generateFirework(bool randomColor,int maxGen)
 {
-	Firework* f = new Firework(particleProperties[FIREWORK], firework_generator, 0, true, randomColor);
+	Firework* f = new Firework(particleProperties[FIREWORK], firework_generator, 0, maxGen, true , randomColor);
 	f->getVel() = f->getVel() * GetCamera()->getDir();
 	f->getPos() = GetCamera()->getEye();
 	addParticles({ f });

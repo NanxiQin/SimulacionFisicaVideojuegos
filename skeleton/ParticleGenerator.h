@@ -25,9 +25,9 @@ protected:
 
 	std::string _name;
 
-	ParticleGenerator(ParticleProperties modelParticle, Vector3 originOffset = { 0,0,0 },double minLifeT=0,double maxLifeT=0) :
-		_model_particle(new Particle(modelParticle,false)), originOffset(originOffset), _origin(modelParticle.transform.p), _mean_velocity(modelParticle.vel),
-		initMeanVelocity(modelParticle.vel),initOrigin(modelParticle.transform.p),minLifeTime(minLifeT), maxLifeTime(maxLifeT)
+	ParticleGenerator(ParticleProperties modelParticle, Vector3 originOffset = { 0,0,0 }, double minLifeT = 0, double maxLifeT = 0) :
+		_model_particle(new Particle(modelParticle, false)), originOffset(originOffset), _origin(modelParticle.transform.p), _mean_velocity(modelParticle.vel),
+		initMeanVelocity(modelParticle.vel), initOrigin(modelParticle.transform.p), minLifeTime(minLifeT), maxLifeTime(maxLifeT)
 	{
 		if (!maxLifeTime)maxLifeTime = modelParticle.lifeTime;
 		mt = mt19937{ random_device()() };
@@ -35,7 +35,7 @@ protected:
 
 	};
 public:
-	 
+
 	~ParticleGenerator() {
 		delete _model_particle; //se asegura que no se ha borrado anteriormente, porque en al añadirlo a la lista en la generación siempre se crea uno nuevo no usado
 	}
@@ -44,17 +44,19 @@ public:
 
 	inline list<Particle*> generalParticleGeneration() {
 		list<Particle*> list;
-		if (checkGenerationProb() && !hasSurpassParticleMaxNum(_model_particle->getType())) //generar según prob
+		if (!hasSurpassParticleMaxNum(_model_particle->getType())) //generar según prob
 			for (int i = 0; i < _n_particles; ++i) {
-				//prop
-				_model_particle->getPos() = generateRandomPos(_origin);
-				_model_particle->getVel() = generateNewDistribution() * (_mean_velocity);
-				setRandomLifeTime();
+				if (checkGenerationProb()) { //comproobar para cada particula si hay que generar
+					//prop
+					_model_particle->getPos() = generateRandomPos(_origin);
+					_model_particle->getVel() = generateNewDistribution() * (_mean_velocity);
+					setRandomLifeTime();
 
-				_model_particle->registerRender(); //se renderiza si anteriormente no se ha registrado
-				list.push_back(_model_particle);
-				
-				setParticle(_model_particle); //generar una copia del modelo ya que se ha usado para la lista
+					_model_particle->registerRender(); //se renderiza si anteriormente no se ha registrado
+					list.push_back(_model_particle);
+
+					setParticle(_model_particle); //generar una copia del modelo ya que se ha usado para la lista
+				}
 			}
 		return list;
 	}
@@ -65,7 +67,8 @@ public:
 	}
 
 	inline bool checkGenerationProb() {
-		return (uniform_real_distribution<double>(0, 1 - _generation_prob))(mt) == 0;
+		double n = (uniform_real_distribution<double>(0, 1))(mt);
+		return(n < _generation_prob);
 	}
 
 	inline void setOrigin(const Vector3& p) { _origin = p; }
@@ -97,7 +100,7 @@ public:
 
 	inline void resetElapsedTime() {
 		_model_particle->resetElapsedTime();
-		
+
 	}
 	inline Vector3 generateRandomPos(Vector3 pos) {
 		return {
@@ -107,8 +110,8 @@ public:
 	}
 
 	////! @brief --> sets the particle, including its type, lifetime and mean positions and velocities
-	inline void setParticle(Particle* p, bool modify_pos= false, bool modify_vel = false) {
-		if(_model_particle!=p) delete _model_particle; //para no borrar a sí mismo
+	inline void setParticle(Particle* p, bool modify_pos = false, bool modify_vel = false) {
+		if (_model_particle != p) delete _model_particle; //para no borrar a sí mismo
 		_model_particle = p->clone(false); //para no renderizar
 		if (modify_pos) {
 			_origin = p->getPos();
@@ -116,10 +119,11 @@ public:
 		if (modify_vel) {
 			_mean_velocity = p->getVel();
 		}
-		
+
 	}
 
 	inline void setNParticles(int n_p) { _n_particles = n_p; }
+	inline void setGenProb(double prob) { _generation_prob = prob; }
 	virtual void keyPress(unsigned char key) {};
 
 };

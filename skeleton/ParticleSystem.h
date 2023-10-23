@@ -16,8 +16,10 @@ public:
 	void keyPress(unsigned char key, const PxTransform& camera);
 
 	// Method to generate a Firework with the appropiate type
-	void generateFirework(bool randomColor);
-	void initFirework();
+	void generateFirework(bool randomColor, int maxGen);
+
+	template <typename T>
+	void initFirework(double prob, int nParticle);
 
 	void addParticles(list<Particle*>particlesList);
 protected:
