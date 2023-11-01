@@ -16,7 +16,7 @@ public:
 	void keyPress(unsigned char key, const PxTransform& camera);
 
 	// Method to generate a Firework with the appropiate type
-	void generateFirework(bool randomColor, int maxGen);
+	void generateFirework(bool randomColor, int maxGen, int gen);
 
 	template <typename T>
 	void initFirework(double prob, int nParticle);
@@ -28,6 +28,7 @@ protected:
 	list <Particle*> particles;
 	// This generator is only to shoot the firework!!
 	ParticleGenerator* firework_generator;
+	vector< ParticleGenerator*>firework_generators;
 	Vector3 gravity;
 
 	//! This is used currently in the Fireworks to spread more Fireworks!

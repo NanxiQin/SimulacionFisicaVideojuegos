@@ -2,7 +2,7 @@
 
 Particle* Firework::clone(bool render) const
 {
-	return new Firework(prop,nullptr, n_gen,maxGen,render,setRandomColor);
+	return new Firework(prop,gen, n_gen,maxGen,render,setRandomColor);
 }
 
 list<Particle*> Firework::explode()
