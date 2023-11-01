@@ -3,8 +3,11 @@
 #include "Particle.h"
 #include "Firework.h"
 #include "ParticleGenerator.h"
-#include "SimpleParticleGenerator.h".h"
-#include "GaussianParticleGenerator.h".h".h"
+#include "SimpleParticleGenerator.h"
+#include "GaussianParticleGenerator.h"
+#include "ForceGenerator.h"
+#include "GravityForceGenerator.h"
+#include "ParticleForceRegistry.h"
 class ParticleSystem :public System {
 public:
 	// Creates a void system with a det. gravity
@@ -15,22 +18,30 @@ public:
 	void refresh();
 	void keyPress(unsigned char key, const PxTransform& camera);
 
-	// Method to generate a Firework with the appropiate type
-	void generateFirework(bool randomColor, int maxGen, int gen);
-
-	template <typename T>
-	void initFirework(double prob, int nParticle);
 
 	void addParticles(list<Particle*>particlesList);
 protected:
 	// These are the registred generators(for on demand set generation prob.to 0)
 	list <ParticleGenerator*> particleGenerators;
 	list <Particle*> particles;
+
+	//Force
+	ParticleForceRegistry forceRegistry;
+	list <ForceGenerator*> forceGenerators;
+	double currTime;
+
+
 	// This generator is only to shoot the firework!!
-	ParticleGenerator* firework_generator;
 	vector< ParticleGenerator*>firework_generators;
 	Vector3 gravity;
 
+	// Method to generate a Firework with the appropiate type
+	void generateFirework(bool randomColor, int maxGen, int gen);
+
+	template <typename T>
+	void initFirework(double prob, int nParticle);
+	void createFireworkGenerators();
+	void createForceGenerators();
 	//! This is used currently in the Fireworks to spread more Fireworks!
 	void onParticleDeath(Particle* p);
 

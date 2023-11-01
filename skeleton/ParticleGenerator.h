@@ -39,6 +39,9 @@ public:
 	~ParticleGenerator() {
 		delete _model_particle; //se asegura que no se ha borrado anteriormente, porque en al añadirlo a la lista en la generación siempre se crea uno nuevo no usado
 	}
+	void addParticleToRegistry(Particle* p) { //DUDA
+		
+	}
 	virtual list<Particle*> generateParticles() = 0;
 	virtual Vector3 generateNewDistribution() = 0;
 

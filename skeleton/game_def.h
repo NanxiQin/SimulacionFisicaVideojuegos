@@ -119,4 +119,7 @@ namespace game_def {
 	const int FIREWORK_MAX_GEN=5;
 
 #pragma endregion
+
+	enum ForceGeneratorType { Gravity ,ForceGenerator_SIZE };
+
 }

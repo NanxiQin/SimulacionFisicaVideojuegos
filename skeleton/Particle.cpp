@@ -1,7 +1,7 @@
 #include "Particle.h"
 #include <iostream>
 
-Particle::Particle(ParticleProperties properties, bool registerRender) : prop(properties), invMass(1 / properties.mass)
+Particle::Particle(ParticleProperties properties, bool registerRender) : prop(properties), invMass(1 / properties.mass),forceAccum(0)
 {
 	if (registerRender)
 		renderItem = new RenderItem(CreateShape(PxSphereGeometry(properties.mass)), &prop.transform, properties.color);
@@ -29,11 +29,17 @@ Particle* Particle::clone(bool render) const
 }
 
 void Particle::update(double t) {
-	prop.transform.p += prop.vel * t; //multiplicar por t para no depender del deltaTime
+	//// Get the accel considering the force accum
+	Vector3 resulting_accel = forceAccum * invMass;
+	prop.vel += resulting_accel * t; // Ex. 1.3 --> add 
+
 	prop.vel += prop.acceleration * t; //incrementar velocidad según aceleración
 	prop.vel *= powf(prop.damping, t); //limitar la velocidad
+	prop.transform.p += prop.vel * t; //multiplicar por t para no depender del deltaTime
 	if (prop.elapsedTime < prop.lifeTime)
 		prop.elapsedTime += t;
 	else alive = false;
+	// Clear accum
+	clearAccum();
 }
 

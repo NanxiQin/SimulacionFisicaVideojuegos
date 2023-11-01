@@ -1,11 +1,9 @@
 #include "ParticleSystem.h"
 #include <iostream>
 
-ParticleSystem::ParticleSystem(Scene* scene, const Vector3& g) :System(scene), gravity(g), firework_generator(nullptr)
+ParticleSystem::ParticleSystem(Scene* scene, const Vector3& g) :System(scene), gravity(g), forceRegistry()
 {
-	initFirework<SimpleParticleGenerator>(1, 10);
-	initFirework<GaussianParticleGenerator>(0.8, 5); //+gen gau
-	initFirework<GaussianParticleGenerator>(0.5, 5); //random -prob
+	createFireworkGenerators();
 }
 
 ParticleSystem::~ParticleSystem()
@@ -18,12 +16,18 @@ ParticleSystem::~ParticleSystem()
 	}
 
 	for (auto g : particleGenerators) delete g;
+	particleGenerators.clear();
 	for (auto g : firework_generators) delete g;
-	firework_generator = nullptr;
+	firework_generators.clear();
+	for (auto g : forceGenerators) delete g;
+	forceGenerators.clear();
 }
 
 void ParticleSystem::update(double t)
 {
+	//currTime += t;//DUDA
+	forceRegistry.updateForces(t);
+
 	refresh();
 	//generar nuevas partículasS
 	for (auto g : particleGenerators)
@@ -115,6 +119,17 @@ void ParticleSystem::generateFirework(bool randomColor, int maxGen, int gen)
 	addParticles({ f });
 }
 
+
+void ParticleSystem::createFireworkGenerators()
+{
+	initFirework<SimpleParticleGenerator>(1, 10);
+	initFirework<GaussianParticleGenerator>(0.8, 5); //+gen gau
+	initFirework<GaussianParticleGenerator>(0.5, 5); //random -prob
+}
+
+void ParticleSystem::createForceGenerators()
+{
+}
 
 void ParticleSystem::addParticles(list<Particle*> particlesList)
 {
