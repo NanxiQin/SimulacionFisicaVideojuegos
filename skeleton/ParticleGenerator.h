@@ -6,6 +6,8 @@
 #include "Particle.h"
 #include <random> 
 #include <iostream>
+#include "ParticleForceRegistry.h"
+#include "ForceGenerator.h"
 using namespace std;
 using namespace game_def;
 class ParticleGenerator
@@ -23,10 +25,13 @@ protected:
 	uniform_real_distribution<double> probability;
 	mt19937 mt;
 
-	std::string _name;
+	//std::string _name;
 
-	ParticleGenerator(ParticleProperties modelParticle, Vector3 originOffset = { 0,0,0 }, double minLifeT = 0, double maxLifeT = 0) :
-		_model_particle(new Particle(modelParticle, false)), originOffset(originOffset), _origin(modelParticle.transform.p), _mean_velocity(modelParticle.vel),
+	ParticleForceRegistry* forceRegistry;
+	list<ForceGenerator*> forceGenerators;
+
+	ParticleGenerator(ParticleProperties modelParticle, Vector3 originOffset = { 0,0,0 }, double minLifeT = 0, double maxLifeT = 0, ParticleForceRegistry* forceRegistry=nullptr, list<ForceGenerator*>forceGenerators={}) :
+		_model_particle(new Particle(modelParticle, false)), originOffset(originOffset), _origin(modelParticle.transform.p), _mean_velocity(modelParticle.vel), forceGenerators(forceGenerators), forceRegistry(forceRegistry),
 		initMeanVelocity(modelParticle.vel), initOrigin(modelParticle.transform.p), minLifeTime(minLifeT), maxLifeTime(maxLifeT)
 	{
 		if (!maxLifeTime)maxLifeTime = modelParticle.lifeTime;
@@ -40,8 +45,12 @@ public:
 		delete _model_particle; //se asegura que no se ha borrado anteriormente, porque en al añadirlo a la lista en la generación siempre se crea uno nuevo no usado
 	}
 	void addParticleToRegistry(Particle* p) { //DUDA
-		
+		for (auto fg : forceGenerators) {
+			forceRegistry->addRegistry(fg,p);
+		}
 	}
+	void addForceRegistry(ParticleForceRegistry* fr) { forceRegistry = fr; }
+	void addForceGenerators(list<ForceGenerator*> fg) { forceGenerators = fg; }
 	virtual list<Particle*> generateParticles() = 0;
 	virtual Vector3 generateNewDistribution() = 0;
 
@@ -56,6 +65,9 @@ public:
 					setRandomLifeTime();
 
 					_model_particle->registerRender(); //se renderiza si anteriormente no se ha registrado
+					
+					addParticleToRegistry(_model_particle);
+					
 					list.push_back(_model_particle);
 
 					setParticle(_model_particle); //generar una copia del modelo ya que se ha usado para la lista

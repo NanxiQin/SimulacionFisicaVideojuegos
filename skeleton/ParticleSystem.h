@@ -26,8 +26,10 @@ protected:
 	list <Particle*> particles;
 
 	//Force
-	ParticleForceRegistry forceRegistry;
-	list <ForceGenerator*> forceGenerators;
+	ParticleForceRegistry* forceRegistry;
+
+	//list <ForceGenerator*> forceGenerators;
+	unordered_map <ForceGeneratorType,ForceGenerator* > forceGenerators;
 	double currTime;
 
 
@@ -50,12 +52,12 @@ protected:
 	}
 
 	template<class T>
-	inline T* createGenerator(bool addTolist, GeneratorEffectType type = Default, Vector3 pos = { 0,0,0 }, Color color = COLOR_SIZE, DistributionProp distribution = generatorEffect[Default].distribution) {
+	inline T* createGenerator(bool addTolist, GeneratorEffectType type = DefaultEffect, Vector3 pos = { 0,0,0 }, Color color = COLOR_SIZE, DistributionProp distribution = generatorEffect[DefaultEffect].distribution) {
 		GeneratorEffectProperties g = generatorEffect[type];
 
 		if (color != COLOR_SIZE)  g.model.color = colorRGB[color];
 		if (pos != Vector3(0, 0, 0)) g.model.transform = PxTransform(pos);
-		if (distribution != generatorEffect[Default].distribution) g.distribution = distribution;
+		if (distribution != generatorEffect[DefaultEffect].distribution) g.distribution = distribution;
 
 		if (typeid(T) == typeid(GaussianParticleGenerator)) conversionUniformToGaussian(g.distribution);
 		

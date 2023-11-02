@@ -1,6 +1,5 @@
 #pragma once
 #include "Entity.h"
-
 using namespace physx;
 using namespace std;
 class Particle :public Entity

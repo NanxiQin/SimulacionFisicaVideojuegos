@@ -87,7 +87,7 @@ namespace game_def {
 
 
 #pragma region particle generator
-	enum GeneratorEffectType { Default, HoseEffect, FogEffect, RainEffect, MilkyWayEffect,FireworkEffect, GeneratorEffect_SIZE };
+	enum GeneratorEffectType { DefaultEffect,NeutralEffect, HoseEffect, FogEffect, RainEffect, MilkyWayEffect,FireworkEffect, GeneratorEffect_SIZE };
 
 	struct DistributionProp {
 		pair<double, double> x;
@@ -109,6 +109,7 @@ namespace game_def {
 
 	static GeneratorEffectProperties generatorEffect[GeneratorEffect_SIZE]{
 		{particleProperties[NONE],{ 10,10,10 }, {{-5,5},{-5,5},{-5,5}},1,DEFAULT_LIFETIME},
+		{{PxTransform(0,0,0),{0,0,0 },{0,0,0}, DEFAULT_DAMPING,1,colorRGB[Red],DEFAULT_LIFETIME,0,NONE},{ 10,10,10 }, {{-5,5},{-5,5},{-5,5}},1,DEFAULT_LIFETIME},
 		{{PxTransform(0,0,0),{5,30,1 },{0,-20,0}, DEFAULT_DAMPING,1,colorRGB[Blue],DEFAULT_LIFETIME,0,NONE},{ 0,0,0 },{{5,10},{1.0,1.5},{-2,2}},DEFAULT_LIFETIME,DEFAULT_LIFETIME},
 		{{PxTransform(0,0,0),{ 0.1,0.1,0.1 },{0,0,0}, DEFAULT_DAMPING,0.2,colorRGB[Grey],7,0,NONE},{ 100,100,100 },{{-2,2},{-2,2},{-2,2}},DEFAULT_LIFETIME,DEFAULT_LIFETIME},
 		{{PxTransform(0,100,0),{ 0.5,0,0.5 },{0,-20,0}, DEFAULT_DAMPING,0.2,colorRGB[Blue],DEFAULT_LIFETIME,0,NONE},{ 100,0,20 },{{-2,2},{0,0},{-2,2}},DEFAULT_LIFETIME,7},
