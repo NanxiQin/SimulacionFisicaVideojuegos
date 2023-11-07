@@ -14,14 +14,13 @@ public:
 	virtual Particle* clone(bool render = true)const;
 	virtual void registerRender();
 
-	ParticleProperties getProp() const { return prop; };
-
 	inline Vector3& getPos() { return prop.transform.p; };
 	inline PxQuat& getRot() { return prop.transform.q; };
 	inline Vector3& getVel() { return prop.vel; };
 	inline ParticleType getType() const { return prop.type; };
 	inline double getInvMass() const { return invMass; };
 	inline double getMass() const { return prop.mass; };
+	inline double getRadius()const { return prop.radius; };
 
 
 	void setColor(Vector4 c) { prop.color = c;  if (renderItem != nullptr) renderItem->setColor(c); };

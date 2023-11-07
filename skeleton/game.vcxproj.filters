@@ -43,17 +43,23 @@
     <ClCompile Include="GaussianParticleGenerator.cpp">
       <Filter>Generators</Filter>
     </ClCompile>
-    <ClCompile Include="ForceGenerator.cpp">
-      <Filter>Generators</Filter>
-    </ClCompile>
-    <ClCompile Include="GravityForceGenerator.cpp">
-      <Filter>Generators</Filter>
-    </ClCompile>
-    <ClCompile Include="ParticleDragGenerator.cpp">
-      <Filter>Generators</Filter>
-    </ClCompile>
     <ClCompile Include="ParticleForceRegistry.cpp">
       <Filter>Structure</Filter>
+    </ClCompile>
+    <ClCompile Include="GravityForceGenerator.cpp">
+      <Filter>Forces</Filter>
+    </ClCompile>
+    <ClCompile Include="ForceGenerator.cpp">
+      <Filter>Forces</Filter>
+    </ClCompile>
+    <ClCompile Include="WindForceGenerator.cpp">
+      <Filter>Forces</Filter>
+    </ClCompile>
+    <ClCompile Include="WhirlwindsForceGenerator.cpp">
+      <Filter>Forces</Filter>
+    </ClCompile>
+    <ClCompile Include="ExplosionForceGenerator.cpp">
+      <Filter>Forces</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -105,17 +111,23 @@
     <ClInclude Include="GaussianParticleGenerator.h">
       <Filter>Generators</Filter>
     </ClInclude>
-    <ClInclude Include="ForceGenerator.h">
-      <Filter>Generators</Filter>
-    </ClInclude>
-    <ClInclude Include="GravityForceGenerator.h">
-      <Filter>Generators</Filter>
-    </ClInclude>
-    <ClInclude Include="ParticleDragGenerator.h">
-      <Filter>Generators</Filter>
-    </ClInclude>
     <ClInclude Include="ParticleForceRegistry.h">
       <Filter>Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="GravityForceGenerator.h">
+      <Filter>Forces</Filter>
+    </ClInclude>
+    <ClInclude Include="ForceGenerator.h">
+      <Filter>Forces</Filter>
+    </ClInclude>
+    <ClInclude Include="WindForceGenerator.h">
+      <Filter>Forces</Filter>
+    </ClInclude>
+    <ClInclude Include="WhirlwindsForceGenerator.h">
+      <Filter>Forces</Filter>
+    </ClInclude>
+    <ClInclude Include="ExplosionForceGenerator.h">
+      <Filter>Forces</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -136,6 +148,9 @@
     </Filter>
     <Filter Include="Generators">
       <UniqueIdentifier>{bcefdaf5-3d69-42a1-a32b-85c8cbe31ce2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Forces">
+      <UniqueIdentifier>{3fe1bfca-edb7-4751-99ce-c07aa41ce368}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

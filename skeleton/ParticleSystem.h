@@ -2,12 +2,15 @@
 #include "System.h"
 #include "Particle.h"
 #include "Firework.h"
-#include "ParticleGenerator.h"
 #include "SimpleParticleGenerator.h"
 #include "GaussianParticleGenerator.h"
-#include "ForceGenerator.h"
 #include "GravityForceGenerator.h"
+#include "WindForceGenerator.h"
+#include "WhirlwindsForceGenerator.h"
+#include "ExplosionForceGenerator.h"
 #include "ParticleForceRegistry.h"
+#include "ShooterManager.h"
+
 class ParticleSystem :public System {
 public:
 	// Creates a void system with a det. gravity
@@ -20,7 +23,13 @@ public:
 
 
 	void addParticles(list<Particle*>particlesList);
+	void addGravity(Particle* particle);
+	void addFloating(Particle* particle);
 protected:
+	Vector3 gravity;
+
+	ShooterManager* shooter;
+
 	// These are the registred generators(for on demand set generation prob.to 0)
 	list <ParticleGenerator*> particleGenerators;
 	list <Particle*> particles;
@@ -28,14 +37,12 @@ protected:
 	//Force
 	ParticleForceRegistry* forceRegistry;
 
-	//list <ForceGenerator*> forceGenerators;
-	unordered_map <ForceGeneratorType,ForceGenerator* > forceGenerators;
-	double currTime;
-
+	list <ForceGenerator*> forceGenerators;
+	GravityForceGenerator* gravityForce;
+	GravityForceGenerator* floatingForce;
 
 	// This generator is only to shoot the firework!!
 	vector< ParticleGenerator*>firework_generators;
-	Vector3 gravity;
 
 	// Method to generate a Firework with the appropiate type
 	void generateFirework(bool randomColor, int maxGen, int gen);
@@ -44,8 +51,14 @@ protected:
 	void initFirework(double prob, int nParticle);
 	void createFireworkGenerators();
 	void createForceGenerators();
+
+	void deregisterForceGenerator(ForceGenerator* fg);
+
 	//! This is used currently in the Fireworks to spread more Fireworks!
 	void onParticleDeath(Particle* p);
+
+
+	void deleteGenerator(ParticleGenerator* gen);
 
 	inline bool isOutOfBounds(const Vector3& pos) const {
 		return fabs(pos.x) > PARTICLE_BOUND_DISTANCE || fabs(pos.y) > PARTICLE_BOUND_DISTANCE || fabs(pos.z) > PARTICLE_BOUND_DISTANCE;
@@ -54,7 +67,6 @@ protected:
 	template<class T>
 	inline T* createGenerator(bool addTolist, GeneratorEffectType type = DefaultEffect, Vector3 pos = { 0,0,0 }, Color color = COLOR_SIZE, DistributionProp distribution = generatorEffect[DefaultEffect].distribution) {
 		GeneratorEffectProperties g = generatorEffect[type];
-
 		if (color != COLOR_SIZE)  g.model.color = colorRGB[color];
 		if (pos != Vector3(0, 0, 0)) g.model.transform = PxTransform(pos);
 		if (distribution != generatorEffect[DefaultEffect].distribution) g.distribution = distribution;
@@ -62,6 +74,7 @@ protected:
 		if (typeid(T) == typeid(GaussianParticleGenerator)) conversionUniformToGaussian(g.distribution);
 		
 		auto gen = new T(g);
+		gen->addForceRegistry(forceRegistry);
 		if (addTolist)
 			particleGenerators.push_back(gen);
 		return gen;

@@ -1,9 +1,6 @@
 #include "GravityForceGenerator.h"
 #include <math.h>
-GravityForceGenerator::GravityForceGenerator(const Vector3& g):ForceGenerator(), gravity(g)
-{
-
-}
+GravityForceGenerator::GravityForceGenerator(const Vector3& g):ForceGenerator(), gravity(g){}
 
 void GravityForceGenerator::updateForce(Particle* particle, double t)
 {

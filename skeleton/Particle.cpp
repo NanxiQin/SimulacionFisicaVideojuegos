@@ -4,7 +4,7 @@
 Particle::Particle(ParticleProperties properties, bool registerRender) : prop(properties), invMass(1 / properties.mass),forceAccum(0)
 {
 	if (registerRender)
-		renderItem = new RenderItem(CreateShape(PxSphereGeometry(properties.mass)), &prop.transform, properties.color);
+		renderItem = new RenderItem(CreateShape(PxSphereGeometry(properties.radius)), &prop.transform, properties.color);
 	else renderItem = nullptr;
 }
 
@@ -31,11 +31,14 @@ Particle* Particle::clone(bool render) const
 void Particle::update(double t) {
 	//// Get the accel considering the force accum
 	Vector3 resulting_accel = forceAccum * invMass;
-	prop.vel += resulting_accel * t; // Ex. 1.3 --> add 
+	prop.vel += resulting_accel * t; 
 
-	prop.vel += prop.acceleration * t; //incrementar velocidad según aceleración
+	//prop.vel += prop.acceleration * t; //ya no se usa
 	prop.vel *= powf(prop.damping, t); //limitar la velocidad
 	prop.transform.p += prop.vel * t; //multiplicar por t para no depender del deltaTime
+	
+	//cout << prop.transform.p.x<<" "<< prop.transform.p.y << " "<<  prop.transform.p.z << endl;
+
 	if (prop.elapsedTime < prop.lifeTime)
 		prop.elapsedTime += t;
 	else alive = false;

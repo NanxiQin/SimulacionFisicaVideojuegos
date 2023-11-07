@@ -1,14 +1,15 @@
 #pragma once
-#include "System.h"
 #include "Particle.h"
-class ShooterManager :public System {
+class ParticleSystem;
+class ShooterManager{
 private:
-	void shoot(ParticleType type);
+	Particle* shoot(ParticleType type);
 	double shoot_elapsedTime;
 	bool shootEnable;
+	ParticleSystem* system;
 public:
-	ShooterManager(Scene* scene);
+	ShooterManager(ParticleSystem* system);
 	void update(double t);
-	void keyPress(unsigned char key, const PxTransform& camera);
+	void keyPress(unsigned char key);
 };
 

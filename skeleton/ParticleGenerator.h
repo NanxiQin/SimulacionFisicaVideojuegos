@@ -28,10 +28,9 @@ protected:
 	//std::string _name;
 
 	ParticleForceRegistry* forceRegistry;
-	list<ForceGenerator*> forceGenerators;
 
-	ParticleGenerator(ParticleProperties modelParticle, Vector3 originOffset = { 0,0,0 }, double minLifeT = 0, double maxLifeT = 0, ParticleForceRegistry* forceRegistry=nullptr, list<ForceGenerator*>forceGenerators={}) :
-		_model_particle(new Particle(modelParticle, false)), originOffset(originOffset), _origin(modelParticle.transform.p), _mean_velocity(modelParticle.vel), forceGenerators(forceGenerators), forceRegistry(forceRegistry),
+	ParticleGenerator(ParticleProperties modelParticle, Vector3 originOffset = { 0,0,0 }, double minLifeT = 0, double maxLifeT = 0, ParticleForceRegistry* forceRegistry = nullptr) :
+		_model_particle(new Particle(modelParticle, false)), originOffset(originOffset), _origin(modelParticle.transform.p), _mean_velocity(modelParticle.vel), forceRegistry(forceRegistry),
 		initMeanVelocity(modelParticle.vel), initOrigin(modelParticle.transform.p), minLifeTime(minLifeT), maxLifeTime(maxLifeT)
 	{
 		if (!maxLifeTime)maxLifeTime = modelParticle.lifeTime;
@@ -43,14 +42,23 @@ public:
 
 	~ParticleGenerator() {
 		delete _model_particle; //se asegura que no se ha borrado anteriormente, porque en al añadirlo a la lista en la generación siempre se crea uno nuevo no usado
+		forceRegistry->deleteParticleGenRegistry(this); //deregistrarse
 	}
-	void addParticleToRegistry(Particle* p) { //DUDA
-		for (auto fg : forceGenerators) {
-			forceRegistry->addRegistry(fg,p);
+	void addParticleRegistry(Particle* p) {
+		for (auto fg : forceRegistry->ParticleGenMap()[this]) { //recorre su lista correspondiente de fuerzas
+			forceRegistry->addParticleRegistry(fg, p);
 		}
 	}
 	void addForceRegistry(ParticleForceRegistry* fr) { forceRegistry = fr; }
-	void addForceGenerators(list<ForceGenerator*> fg) { forceGenerators = fg; }
+	void addForceGenerators(list<ForceGenerator*> fg) {
+
+		for (auto f : fg) forceRegistry->addParticleGenRegistry(f, this);
+
+	}
+	void deleteForceGenerator(ForceGenerator* fg) {
+		forceRegistry->deleteForceRegistryFromGen(fg, this);
+
+	}
 	virtual list<Particle*> generateParticles() = 0;
 	virtual Vector3 generateNewDistribution() = 0;
 
@@ -65,9 +73,9 @@ public:
 					setRandomLifeTime();
 
 					_model_particle->registerRender(); //se renderiza si anteriormente no se ha registrado
-					
-					addParticleToRegistry(_model_particle);
-					
+
+					addParticleRegistry(_model_particle);
+
 					list.push_back(_model_particle);
 
 					setParticle(_model_particle); //generar una copia del modelo ya que se ha usado para la lista
@@ -126,7 +134,7 @@ public:
 
 	////! @brief --> sets the particle, including its type, lifetime and mean positions and velocities
 	inline void setParticle(Particle* p, bool modify_pos = false, bool modify_vel = false) {
-		if (_model_particle != p) delete _model_particle; //para no borrar a sí mismo
+		if (_model_particle != p)  delete _model_particle; //para no borrar a sí mismo
 		_model_particle = p->clone(false); //para no renderizar
 		if (modify_pos) {
 			_origin = p->getPos();

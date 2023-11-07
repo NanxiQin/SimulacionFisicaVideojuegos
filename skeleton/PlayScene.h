@@ -7,7 +7,6 @@ class PlayScene:public Scene
 {
 private:
 
-	ShooterManager* shooterMng;
 	ParticleSystem* particleSys;
 
 public:

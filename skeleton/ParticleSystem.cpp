@@ -1,14 +1,21 @@
 #include "ParticleSystem.h"
 #include <iostream>
 
-ParticleSystem::ParticleSystem(Scene* scene, const Vector3& g) :System(scene), gravity(g), forceRegistry(new ParticleForceRegistry())
+ParticleSystem::ParticleSystem(Scene* scene, const Vector3& g) :System(scene), shooter(new ShooterManager(this)), gravity(g), forceRegistry(new ParticleForceRegistry()), gravityForce(new GravityForceGenerator(g)), floatingForce(new GravityForceGenerator(FLOAT_FORCE))
 {
 	createFireworkGenerators();
-	
-	forceGenerators.insert({ Gravity,new GravityForceGenerator (g)});
-	auto gen=createGenerator<SimpleParticleGenerator>(true, NeutralEffect,{0,0,0},Blue);
-	gen->addForceRegistry(forceRegistry);
-	gen->addForceGenerators({ forceGenerators[Gravity] });;
+
+	forceGenerators.push_back(gravityForce);
+	forceGenerators.push_back(floatingForce);
+
+
+	auto gen = createGenerator<SimpleParticleGenerator>(true, NeutralEffect, { 0,0,0 }, Blue);
+	auto e = new WindForceGenerator(0.3, { 10,5,0 });
+	/*auto gen = createGenerator<SimpleParticleGenerator>(true, NeutralEffect, { 0,0,0 }, Blue);
+	auto e = new ExplosionForceGenerator({ 10,0,0 }, 1000, 1000, 5);*/
+	forceGenerators.push_back(e);
+
+	gen->addForceGenerators({ e, gravityForce });
 }
 
 ParticleSystem::~ParticleSystem()
@@ -24,18 +31,20 @@ ParticleSystem::~ParticleSystem()
 	particleGenerators.clear();
 	for (auto g : firework_generators) delete g;
 	firework_generators.clear();
-	for (auto g : forceGenerators) delete g.second;
+	for (auto g : forceGenerators)delete g;
 	forceGenerators.clear();
 
+	delete shooter;
 	delete forceRegistry;
 }
 
 void ParticleSystem::update(double t)
 {
-	//currTime += t;//DUDA
-	forceRegistry->updateForces(t);
-
 	refresh();
+
+	shooter->update(t);
+	forceRegistry->updateForces(t);
+	for (auto g : forceGenerators) g->updateTime(t);
 	//generar nuevas partículasS
 	for (auto g : particleGenerators)
 		addParticles(g->generateParticles());
@@ -65,6 +74,18 @@ void ParticleSystem::refresh()
 		else ++it;
 
 	}
+
+	auto f_it = forceGenerators.begin();
+	while (f_it != forceGenerators.end()) {
+		ForceGenerator* f = *f_it;
+		if (!f->isAlive()) {
+			forceRegistry->deleteForceRegistry(f);
+			delete* f_it;
+			f_it = forceGenerators.erase(f_it);
+		}
+		else ++f_it;
+
+	}
 }
 
 void ParticleSystem::keyPress(unsigned char key, const PxTransform& camera)
@@ -81,29 +102,44 @@ void ParticleSystem::keyPress(unsigned char key, const PxTransform& camera)
 		generateFirework(true, 5, 2);
 		break;
 	case add_UniformGen:
-		createGenerator<SimpleParticleGenerator>(true, DefaultEffect, { -50,0,0 }, Pink);
+		createGenerator<SimpleParticleGenerator>(true, DefaultEffect, { -50,0,0 }, Pink)->addForceGenerators({ gravityForce });
 		break;
 	case add_GaussianGen:
-		createGenerator<GaussianParticleGenerator>(true, DefaultEffect, { -50,0,0 }, Green);
+		createGenerator<GaussianParticleGenerator>(true, DefaultEffect, { -50,0,0 }, Green)->addForceGenerators({ gravityForce });
 		break;
 	case add_HoseEffect:
-		createGenerator<SimpleParticleGenerator>(true, HoseEffect);
+		createGenerator<SimpleParticleGenerator>(true, HoseEffect)->addForceGenerators({ gravityForce });
 		break;
 	case add_FogEffect:
 		createGenerator<GaussianParticleGenerator>(true, FogEffect);
 		break;
 	case add_RainEffect:
-		createGenerator<SimpleParticleGenerator>(true, RainEffect);
+		createGenerator<SimpleParticleGenerator>(true, RainEffect)->addForceGenerators({ gravityForce });
 		break;
 	case add_MilkyEffect:
 		createGenerator<SimpleParticleGenerator>(true, MilkyWayEffect);
 		break;
+	case add_Uniwind:
+		(particleGenerators.back())->addForceGenerators({ new WindForceGenerator(0.3, { 10,5,0 }) });
+		break;
+	case add_Windwhirl:
+		(particleGenerators.back())->addForceGenerators({ new WhirlwindsForceGenerator(1, 0.8) });
+		break;
+	case add_Explosion:
+		(particleGenerators.back())->addForceGenerators({ new ExplosionForceGenerator({ 10,0,0}, 1000, 1000, 5) });
+		break;
 	case 'f':
-		if (!particleGenerators.empty()) particleGenerators.pop_back();
+		if (!particleGenerators.empty()) {
+			deleteGenerator(particleGenerators.back());
+			particleGenerators.pop_back();
+		}
+		break;
+	case 'g':
+		deregisterForceGenerator(gravityForce);
 		break;
 
-
 	default:
+		shooter->keyPress(key);
 		break;
 	}
 
@@ -115,6 +151,7 @@ void ParticleSystem::initFirework(double prob, int nParticle)
 	auto g = createGenerator<T>(false, FireworkEffect);
 	g->setGenProb(prob);
 	g->setNParticles(nParticle);
+	g->addForceGenerators({ gravityForce });
 	firework_generators.push_back(g);
 }
 
@@ -138,12 +175,27 @@ void ParticleSystem::createForceGenerators()
 {
 }
 
+void ParticleSystem::deregisterForceGenerator(ForceGenerator* fg)
+{
+	forceRegistry->deleteForceRegistry(fg);
+}
+
 void ParticleSystem::addParticles(list<Particle*> particlesList)
 {
 	for (auto p : particlesList) {
 		particles.push_back(p);
 		++particleNum[p->getType()];
 	}
+}
+
+void ParticleSystem::addGravity(Particle* particle)
+{
+	if (particle != nullptr) forceRegistry->addParticleRegistry(gravityForce, particle);
+}
+
+void ParticleSystem::addFloating(Particle* particle)
+{
+	if (particle != nullptr)forceRegistry->addParticleRegistry(floatingForce, particle);
 }
 
 void ParticleSystem::onParticleDeath(Particle* p) {
@@ -158,7 +210,12 @@ void ParticleSystem::onParticleDeath(Particle* p) {
 		}
 	}
 
+}
 
+void ParticleSystem::deleteGenerator(ParticleGenerator* gen)
+{
+	forceRegistry->deleteParticleGenRegistry(gen);
+	delete gen;
 }
 
 void ParticleSystem::debugNumParticle()
