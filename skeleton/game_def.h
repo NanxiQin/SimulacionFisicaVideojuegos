@@ -25,7 +25,11 @@ namespace game_def {
 		add_HoseEffect = '6',
 		add_FogEffect = '7',
 		add_RainEffect = '8',
-		add_MilkyEffect = '9'
+		add_MilkyEffect = '9',
+
+		deleteLastParticleGen = 'f',
+		deregisterGravity = 'g',
+		deleteLastForceGen = 'h',
 
 
 	};
@@ -64,7 +68,6 @@ namespace game_def {
 	struct ParticleProperties {
 		PxTransform transform;
 		Vector3 vel; //m/s
-		Vector3 acceleration;
 		double damping;
 		double mass; //kg
 		double radius;
@@ -79,12 +82,12 @@ namespace game_def {
 
 
 	static ParticleProperties particleProperties[PARTICLE_TYPE_SIZE]{
-		{PxTransform(0,0,0),{ 5,5,5 },{ 0,0,0 },DEFAULT_DAMPING,DEFAULT_MASS,DEFAULT_RADIUS,colorRGB[Red],DEFAULT_LIFETIME,0,NONE},
-		{PxTransform(0,0,0),{ 200,200,200 },{0,-1,0},0.99,0.5,0.5,colorRGB[Purple],DEFAULT_LIFETIME,0,PISTOL},
-		{PxTransform(0,0,0),{ 40,70,40 },{0,-20,0},0.99,5,5,colorRGB[Black],DEFAULT_LIFETIME,0,ARTILLERY},
-		{PxTransform(0,0,0),{ 10,10,10 },{0,4,0},0.9,2,2,colorRGB[Orange],DEFAULT_LIFETIME,0,FIREBALL},
-		{PxTransform(0,0,0),{ 100,100,100 },{0,0,0},0.99,0.1,0.1,colorRGB[Blue],DEFAULT_LIFETIME,0,LASER},//No gravity
-		{PxTransform(0,0,0),{ 2,100,2 },{0,GRAVITY,0},0.99,0.5,0.5,colorRGB[White],2,0,FIREWORK},
+		{PxTransform(0,0,0),{ 5,5,5 },DEFAULT_DAMPING,2,0.2,colorRGB[Red],DEFAULT_LIFETIME,0,NONE},
+		{PxTransform(0,0,0),{ 200,200,200 },0.99,0.5,0.5,colorRGB[Purple],DEFAULT_LIFETIME,0,PISTOL},
+		{PxTransform(0,0,0),{ 40,70,40 },0.99,5,5,colorRGB[Black],DEFAULT_LIFETIME,0,ARTILLERY},
+		{PxTransform(0,0,0),{ 10,10,10 },0.9,2,2,colorRGB[Orange],DEFAULT_LIFETIME,0,FIREBALL},
+		{PxTransform(0,0,0),{ 100,100,100 },0.99,0.1,0.1,colorRGB[Blue],DEFAULT_LIFETIME,0,LASER},//No gravity
+		{PxTransform(0,0,0),{ 2,100,2 },0.99,0.5,0.5,colorRGB[White],2,0,FIREWORK},
 	};
 
 #pragma endregion
@@ -118,18 +121,18 @@ namespace game_def {
 
 	static GeneratorEffectProperties generatorEffect[GeneratorEffect_SIZE]{
 		{particleProperties[NONE],{ 10,10,10 }, {{-5,5},{-5,5},{-5,5}},1,DEFAULT_LIFETIME},
-		{{PxTransform(0,0,0),{0,0,0 },{0,0,0}, DEFAULT_DAMPING,1,1,colorRGB[Red],DEFAULT_LIFETIME,0,NONE},{10,10,10 }, {{-5,5},{-5,5},{-5,5}},5,10},
-		{{PxTransform(0,0,0),{5,30,1 },{0,0,0}, DEFAULT_DAMPING,1,1,colorRGB[Blue],DEFAULT_LIFETIME,0,NONE},{ 0,0,0 },{{5,10},{1.0,1.5},{-2,2}},DEFAULT_LIFETIME,DEFAULT_LIFETIME},
-		{{PxTransform(0,0,0),{ 0.1,0.1,0.1 },{0,0,0}, DEFAULT_DAMPING,0.2,0.2,colorRGB[Grey],7,0,NONE},{ 100,100,100 },{{-2,2},{-2,2},{-2,2}},DEFAULT_LIFETIME,DEFAULT_LIFETIME},
-		{{PxTransform(0,0,0),{ 0.5,0,0.5 },{0,0,0}, DEFAULT_DAMPING,0.2,0.2,colorRGB[Blue],DEFAULT_LIFETIME,0,NONE},{ 100,0,20 },{{-2,2},{0,0},{-2,2}},DEFAULT_LIFETIME,7},
-		{{PxTransform(-40,0,0),{ 0.01,0.01,0.01 },{0,0,0}, DEFAULT_DAMPING,0.1,0.1,colorRGB[Yellow],DEFAULT_LIFETIME,0,NONE},{ 200,0,50 },{{-2,2},{-2,2},{-2,2}},DEFAULT_LIFETIME,DEFAULT_LIFETIME},
-		{{PxTransform(0,0,0),{ 5,20,5 },{0,0,0},0.99,0.2,0.2,colorRGB[Blue],4,0,FIREWORK},{ 0,0,0 },{ {-3,3},{1,2},{-3,3}},1,1.5},
+		{{PxTransform(0,0,0),{0,0,0 }, DEFAULT_DAMPING,100,1,colorRGB[Red],DEFAULT_LIFETIME,0,NONE},{10,10,10}, {{-5,5},{-5,5},{-5,5}},10,20},
+		{{PxTransform(0,0,0),{5,30,1 }, DEFAULT_DAMPING,3,0.3,colorRGB[Blue],DEFAULT_LIFETIME,0,NONE},{ 0,0,0 },{{5,10},{1.0,1.5},{-2,2}},DEFAULT_LIFETIME,10},
+		{{PxTransform(0,0,0),{ 0.1,0.1,0.1 }, DEFAULT_DAMPING,0.5,0.1,colorRGB[Grey],7,0,NONE},{ 100,100,100 },{{-2,2},{-2,2},{-2,2}},DEFAULT_LIFETIME,DEFAULT_LIFETIME},
+		{{PxTransform(0,0,0),{ 0.5,0,0.5 }, DEFAULT_DAMPING,1,0.2,colorRGB[Blue],DEFAULT_LIFETIME,0,NONE},{ 100,0,20 },{{-2,2},{0,0},{-2,2}},DEFAULT_LIFETIME,7},
+		{{PxTransform(-40,0,0),{ 0.01,0.01,0.01 }, DEFAULT_DAMPING,0.5,0.1,colorRGB[Yellow],DEFAULT_LIFETIME,0,NONE},{ 200,0,50 },{{-2,2},{-2,2},{-2,2}},DEFAULT_LIFETIME,DEFAULT_LIFETIME},
+		{{PxTransform(0,0,0),{ 5,20,5 },0.99,0.2,0.02,colorRGB[Blue],4,0,FIREWORK},{ 0,0,0 },{ {-3,3},{1,2},{-3,3}},1,1.5},
 	};
 
 	const int FIREWORK_MAX_GEN=5;
 
 #pragma endregion
 
-	enum ForceGeneratorType { Gravity,ForceGenerator_SIZE };
+	enum ForceGeneratorType { GravityForce,WindForce,WindWhirlForce,ExplosionForce,ForceGenerator_SIZE };
 
 }

@@ -1,11 +1,10 @@
 #include "Particle.h"
 #include <iostream>
 
-Particle::Particle(ParticleProperties properties, bool registerRender) : prop(properties), invMass(1 / properties.mass),forceAccum(0)
+Particle::Particle(ParticleProperties properties, bool registerRender) : prop(properties), invMass(1 / properties.mass),forceAccum(0), renderItem(nullptr)
 {
 	if (registerRender)
-		renderItem = new RenderItem(CreateShape(PxSphereGeometry(properties.radius)), &prop.transform, properties.color);
-	else renderItem = nullptr;
+		createNewRenderItem();
 }
 
 Particle::~Particle() {
@@ -20,7 +19,14 @@ void Particle::die() {
 void Particle::registerRender()
 {
 	if (renderItem == nullptr)
-		renderItem = new RenderItem(CreateShape(PxSphereGeometry(prop.mass)), &prop.transform, prop.color);
+		createNewRenderItem();
+}
+
+void Particle::createNewRenderItem()
+{
+	if (renderItem != nullptr) delete renderItem;
+
+	renderItem = new RenderItem(CreateShape(PxSphereGeometry(prop.radius)), &prop.transform, prop.color);
 }
 
 Particle* Particle::clone(bool render) const
@@ -37,8 +43,6 @@ void Particle::update(double t) {
 	prop.vel *= powf(prop.damping, t); //limitar la velocidad
 	prop.transform.p += prop.vel * t; //multiplicar por t para no depender del deltaTime
 	
-	//cout << prop.transform.p.x<<" "<< prop.transform.p.y << " "<<  prop.transform.p.z << endl;
-
 	if (prop.elapsedTime < prop.lifeTime)
 		prop.elapsedTime += t;
 	else alive = false;

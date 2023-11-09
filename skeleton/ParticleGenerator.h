@@ -13,7 +13,7 @@ using namespace game_def;
 class ParticleGenerator
 {
 protected:
-	int _n_particles = 3; // Number of particles for each generateParticles call(TODO: add randomness ? ? )
+	int _n_particles = 1; // Number of particles for each generateParticles call(TODO: add randomness ? ? )
 	double _generation_prob = 1; // IF 1.0 --> always produces particles
 	Particle* _model_particle = nullptr; // Has the attributes of the particle that will be generated!(damping, lifetime, etc.)
 	Vector3 _origin, _mean_velocity;
@@ -94,11 +94,6 @@ public:
 		return(n < _generation_prob);
 	}
 
-	inline void setOrigin(const Vector3& p) { _origin = p; }
-
-	inline void setMeanVelocity(const Vector3& v) {
-		_mean_velocity = v;
-	}
 	inline Vector3 getMeanVelocity() const {
 		return _mean_velocity;
 	}
@@ -110,6 +105,13 @@ public:
 	}
 	inline Vector4 getRandomColor() const {
 		return colorRGB[rand() % Brown];
+	}
+	inline void setOrigin(const Vector3& p) { _origin = p; }
+	inline void setMass(double mass){ _model_particle->setMass(mass); }
+	inline void setRadius(double r){ _model_particle->setRadius(r); }
+
+	inline void setMeanVelocity(const Vector3& v) {
+		_mean_velocity = v;
 	}
 	inline void setColor(Vector4 c) {
 		_model_particle->setColor(c);

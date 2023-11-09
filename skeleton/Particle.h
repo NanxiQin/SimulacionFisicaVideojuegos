@@ -22,8 +22,12 @@ public:
 	inline double getMass() const { return prop.mass; };
 	inline double getRadius()const { return prop.radius; };
 
+	void createNewRenderItem();
+
 
 	void setColor(Vector4 c) { prop.color = c;  if (renderItem != nullptr) renderItem->setColor(c); };
+	void setMass(double mass) { prop.mass = mass; };
+	void setRadius(double r) { prop.radius = r;  createNewRenderItem(); };
 
 	void resetElapsedTime() { prop.elapsedTime = 0; };
 	void setLifeTime(double lifeTime_) { prop.lifeTime = lifeTime_; }

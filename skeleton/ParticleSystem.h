@@ -47,18 +47,21 @@ protected:
 	// Method to generate a Firework with the appropiate type
 	void generateFirework(bool randomColor, int maxGen, int gen);
 
+	void initForcesTest();
 	template <typename T>
 	void initFirework(double prob, int nParticle);
 	void createFireworkGenerators();
 	void createForceGenerators();
+	void deleteAllParticleGenerators();
+	void deleteParticleGenerator(ParticleGenerator* gen);
+	void deleteForceGenerator(ForceGenerator* fg);
+	void addForcetoAllParticlegenerators(list <ForceGenerator*> fg);
 
-	void deregisterForceGenerator(ForceGenerator* fg);
+	void deregisterForceGenerator(ForceGenerator* fg, ParticleGenerator* gen);
 
 	//! This is used currently in the Fireworks to spread more Fireworks!
 	void onParticleDeath(Particle* p);
 
-
-	void deleteGenerator(ParticleGenerator* gen);
 
 	inline bool isOutOfBounds(const Vector3& pos) const {
 		return fabs(pos.x) > PARTICLE_BOUND_DISTANCE || fabs(pos.y) > PARTICLE_BOUND_DISTANCE || fabs(pos.z) > PARTICLE_BOUND_DISTANCE;
