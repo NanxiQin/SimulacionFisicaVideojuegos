@@ -82,7 +82,7 @@ namespace game_def {
 
 
 	static ParticleProperties particleProperties[PARTICLE_TYPE_SIZE]{
-		{PxTransform(0,0,0),{ 5,5,5 },DEFAULT_DAMPING,2,0.2,colorRGB[Red],DEFAULT_LIFETIME,0,NONE},
+		{PxTransform(0,0,0),{ 5,5,5 },DEFAULT_DAMPING,10,0.5,colorRGB[Red],DEFAULT_LIFETIME,0,NONE},
 		{PxTransform(0,0,0),{ 200,200,200 },0.99,0.5,0.5,colorRGB[Purple],DEFAULT_LIFETIME,0,PISTOL},
 		{PxTransform(0,0,0),{ 40,70,40 },0.99,5,5,colorRGB[Black],DEFAULT_LIFETIME,0,ARTILLERY},
 		{PxTransform(0,0,0),{ 10,10,10 },0.9,2,2,colorRGB[Orange],DEFAULT_LIFETIME,0,FIREBALL},
@@ -121,7 +121,7 @@ namespace game_def {
 
 	static GeneratorEffectProperties generatorEffect[GeneratorEffect_SIZE]{
 		{particleProperties[NONE],{ 10,10,10 }, {{-5,5},{-5,5},{-5,5}},1,DEFAULT_LIFETIME},
-		{{PxTransform(0,0,0),{0,0,0 }, DEFAULT_DAMPING,100,1,colorRGB[Red],DEFAULT_LIFETIME,0,NONE},{10,10,10}, {{-5,5},{-5,5},{-5,5}},10,20},
+		{{PxTransform(0,0,0),{0,0,0 }, DEFAULT_DAMPING,200,1,colorRGB[Red],DEFAULT_LIFETIME,0,NONE},{30,30,30}, {{-5,5},{-5,5},{-5,5}},15,20},
 		{{PxTransform(0,0,0),{5,30,1 }, DEFAULT_DAMPING,3,0.3,colorRGB[Blue],DEFAULT_LIFETIME,0,NONE},{ 0,0,0 },{{5,10},{1.0,1.5},{-2,2}},DEFAULT_LIFETIME,10},
 		{{PxTransform(0,0,0),{ 0.1,0.1,0.1 }, DEFAULT_DAMPING,0.5,0.1,colorRGB[Grey],7,0,NONE},{ 100,100,100 },{{-2,2},{-2,2},{-2,2}},DEFAULT_LIFETIME,DEFAULT_LIFETIME},
 		{{PxTransform(0,0,0),{ 0.5,0,0.5 }, DEFAULT_DAMPING,1,0.2,colorRGB[Blue],DEFAULT_LIFETIME,0,NONE},{ 100,0,20 },{{-2,2},{0,0},{-2,2}},DEFAULT_LIFETIME,7},

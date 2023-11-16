@@ -4,7 +4,7 @@ class WindForceGenerator : public ForceGenerator
 {
 public:
 	//NOTA: evitar masa muy pequeña con radio muy grande
-	WindForceGenerator(double k1 = 0, Vector3 windVel = { 0,0,0 }, double duration = -1, Vector3 windArea = { 50,50,50 });
+	WindForceGenerator(double k1 = 0, Vector3 windVel = { 0,0,0 }, double duration = -1, Vector3 windArea = { 200,200,200 });
 	virtual void updateForce(Particle* particle, double t);
 	inline void setDrag(double k1_) { k1 = k1_; }
 	inline double getK1() { return k1; }

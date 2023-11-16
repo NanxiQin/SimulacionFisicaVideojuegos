@@ -37,6 +37,7 @@ void ParticleSystem::update(double t)
 	shooter->update(t);
 	forceRegistry->updateForces(t);
 	for (auto g : forceGenerators) g->updateTime(t);
+	
 	//generar nuevas partículasS
 	for (auto g : particleGenerators)
 		addParticles(g->generateParticles());
@@ -114,20 +115,15 @@ void ParticleSystem::keyPress(unsigned char key, const PxTransform& camera)
 		break;
 	case add_Uniwind:
 		deleteForceGenerator(forceGenerators.back());
-		fg = new WindForceGenerator(0.3, { 10,5,0 });
-		forceGenerators.push_back(fg);
-		addForcetoAllParticlegenerators({ fg,gravityForce});
+		addForcetoAllParticlegenerators({ createForceGenerators<WindForceGenerator>(0.3, Vector3(50, 20, 0)),gravityForce});
 		break;
 	case add_Windwhirl:
-
-		fg = new WhirlwindsForceGenerator(1, 0.8);
-		forceGenerators.push_back(fg);
-		addForcetoAllParticlegenerators({ fg,gravityForce });
+		deleteForceGenerator(forceGenerators.back());
+		addForcetoAllParticlegenerators({ createForceGenerators<WhirlwindsForceGenerator>(0.01, 5,Vector3(0,0, 0),7),gravityForce });
 		break;
 	case add_Explosion:
-		fg = new ExplosionForceGenerator({ 10,-10,0 }, 200, 40000, 7);
-		forceGenerators.push_back(fg);
-		addForcetoAllParticlegenerators({ fg,gravityForce });
+		deleteForceGenerator(forceGenerators.back());
+		addForcetoAllParticlegenerators({ createForceGenerators<ExplosionForceGenerator>(Vector3(0,0,0), 200, 400000, 7),gravityForce });
 		break;
 	case deleteLastParticleGen:
 		if (!particleGenerators.empty()) {
@@ -154,7 +150,7 @@ void ParticleSystem::initForcesTest()
 {
 	auto gen = createGenerator<SimpleParticleGenerator>(true, NeutralEffect, { 0,0,0 }, Blue);
 
-	gen = createGenerator<SimpleParticleGenerator>(true, NeutralEffect, { 0,0,0 }, Green);
+	gen = createGenerator<SimpleParticleGenerator>(true, NeutralEffect, { 0,0,0 }, Grey);
 	gen->setMass(50);
 
 	gen = createGenerator<SimpleParticleGenerator>(true, NeutralEffect, { 0,0,0 }, Pink);
@@ -186,11 +182,6 @@ void ParticleSystem::createFireworkGenerators()
 	initFirework<SimpleParticleGenerator>(1, 10);
 	initFirework<GaussianParticleGenerator>(0.8, 5); //+gen gau
 	initFirework<GaussianParticleGenerator>(0.5, 5); //random -prob
-}
-
-void ParticleSystem::createForceGenerators()
-{
-
 }
 
 void ParticleSystem::addGravity(Particle* particle)

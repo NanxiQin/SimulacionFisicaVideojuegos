@@ -51,7 +51,13 @@ protected:
 	template <typename T>
 	void initFirework(double prob, int nParticle);
 	void createFireworkGenerators();
-	void createForceGenerators();
+	
+	template<class T, typename ...Ts>
+	inline T* createForceGenerators(Ts&&...args) {
+		T* fg = new T(forward<Ts>(args)...);
+		forceGenerators.push_back(fg);
+		return fg;
+	}
 	void deleteAllParticleGenerators();
 	void deleteParticleGenerator(ParticleGenerator* gen);
 	void deleteForceGenerator(ForceGenerator* fg);
