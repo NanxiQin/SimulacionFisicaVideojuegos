@@ -18,4 +18,5 @@ void WindForceGenerator::updateForce(Particle* particle, double t)
 	// Apply the wind force
 	Vector3 windF = (k1 + k2 * v.magnitude()) * v;
 	particle->addForce(windF);
+
 }

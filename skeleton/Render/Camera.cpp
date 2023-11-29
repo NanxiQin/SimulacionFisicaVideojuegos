@@ -35,6 +35,11 @@
 
 using namespace physx;
 
+#define KEY_UP 72
+#define KEY_DOWN 80
+#define KEY_LEFT 75
+#define KEY_RIGHT 77
+
 namespace Snippets
 {
 
@@ -60,12 +65,12 @@ bool Camera::handleKey(unsigned char key, int x, int y, float speed)
 	PX_UNUSED(y);
 
 	PxVec3 viewY = mDir.cross(PxVec3(0,1,0)).getNormalized();
-	switch(toupper(key))
+	switch(key)
 	{
-	case 'W':	mEye += mDir*2.0f*speed;		break;
-	case 'S':	mEye -= mDir*2.0f*speed;		break;
-	case 'A':	mEye -= viewY*2.0f*speed;		break;
-	case 'D':	mEye += viewY*2.0f*speed;		break;
+	case 'w':	mEye += mDir * 2.0f * speed;	break;
+	case 's':	mEye -= mDir * 2.0f * speed;		break;
+	case 'a':	mEye -= viewY * 2.0f * speed;		break;
+	case 'd':	mEye += viewY * 2.0f * speed;		break;
 	default:							return false;
 	}
 	return true;

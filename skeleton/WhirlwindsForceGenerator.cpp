@@ -7,8 +7,8 @@ WhirlwindsForceGenerator::WhirlwindsForceGenerator(double k1, double K , Vector3
 
 void WhirlwindsForceGenerator::updateForce(Particle* particle, double t)
 {	
-	auto pVel = particle->getPos();
-	windVel = K * Vector3(origin.z- pVel.z, 50 + origin.y -pVel.y, pVel.x - origin.x);
+	auto pos = particle->getPos();
+	windVel = K * Vector3(origin.z- pos.z, 50 + origin.y - pos.y, pos.x - origin.x);
 	
 	WindForceGenerator::updateForce(particle, t);
 

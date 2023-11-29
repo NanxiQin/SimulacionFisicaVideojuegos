@@ -10,6 +10,9 @@
 #include "ExplosionForceGenerator.h"
 #include "ParticleForceRegistry.h"
 #include "ShooterManager.h"
+#include "AnchoredSpringForceGenerator.h"
+#include "BuoyancyForceGenerator.h"
+#include "RubberBandForceGenerator.h"
 
 class ParticleSystem :public System {
 public:
@@ -26,6 +29,7 @@ public:
 	void addGravity(Particle* particle);
 	void addFloating(Particle* particle);
 protected:
+	bool hasGravity;
 	Vector3 gravity;
 
 	ShooterManager* shooter;
@@ -41,13 +45,21 @@ protected:
 	GravityForceGenerator* gravityForce;
 	GravityForceGenerator* floatingForce;
 
-	// This generator is only to shoot the firework!!
+	// This generator is only to shoot the firework
 	vector< ParticleGenerator*>firework_generators;
 
+
+	void cleanSystem();
 	// Method to generate a Firework with the appropiate type
 	void generateFirework(bool randomColor, int maxGen, int gen);
 
 	void initForcesTest();
+	void springTest();
+	void rubberBandTest();
+	void slinkyTest();
+	void buoyancyTest();
+	void anchoredSpringTest();
+
 	template <typename T>
 	void initFirework(double prob, int nParticle);
 	void createFireworkGenerators();
@@ -58,12 +70,16 @@ protected:
 		forceGenerators.push_back(fg);
 		return fg;
 	}
+
+	void addForcetoAllParticles(list <ForceGenerator*> fg);
+
 	void deleteAllParticleGenerators();
 	void deleteParticleGenerator(ParticleGenerator* gen);
 	void deleteForceGenerator(ForceGenerator* fg);
 	void addForcetoAllParticlegenerators(list <ForceGenerator*> fg);
 
-	void deregisterForceGenerator(ForceGenerator* fg, ParticleGenerator* gen);
+	void deregisterForceGenerator(ForceGenerator* fg);
+	void deregisterForceGeneratorFromGen(ForceGenerator* fg, ParticleGenerator* gen);
 
 	//! This is used currently in the Fireworks to spread more Fireworks!
 	void onParticleDeath(Particle* p);
