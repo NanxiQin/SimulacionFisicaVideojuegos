@@ -7,18 +7,21 @@ class Particle :public Entity
 {
 public:
 
-	Particle(ParticleProperties properties, bool registerRender = true, GeometryType geometryType = PxGeometryType::eSPHERE, bool isStatic = false);
-	Particle(ParticleProperties properties, Vector3 volume, bool registerRender = true, GeometryType geometryType = PxGeometryType::eBOX, bool isStatic = false);
+	Particle(ParticleProperties properties, bool registerRender = true, GeometryType geometryType = PxGeometryType::eSPHERE, bool isStatic = false, PxMaterial* material =nullptr, Vector3 volume={1,1,1});
 	virtual ~Particle();
 
 	void die() override;
-	virtual void update(double t)override;
+	void update(double t)override;
 	virtual Particle* clone(bool render = true)const;
 	virtual void registerRender();
 
-	inline Vector3& getPos() { return prop.transform.p; };
-	inline PxQuat& getRot() { return prop.transform.q; };
-	inline Vector3& getVel() { return prop.vel; };
+	virtual inline Vector3 getPos() { return prop.transform.p; };
+	virtual inline void setPos(Vector3 p) { prop.transform.p = p; };
+
+	inline PxQuat getRot() { return prop.transform.q; };
+	inline void setRot(PxQuat q) { prop.transform.q=q; };
+	virtual inline Vector3 getVel() { return prop.vel; };
+	virtual inline void setVel(Vector3 v) { prop.vel = v; };
 	inline ParticleType getType() const { return prop.type; };
 	inline double getInvMass() const { return invMass; };
 	inline double getMass() const { return prop.mass; };
@@ -41,19 +44,19 @@ public:
 		switch (type)
 		{
 		case PxGeometryType::eBOX:
-			createNewShape<PxBoxGeometry>(volume.x, volume.y, volume.z);
+			createNewShape<PxBoxGeometry>(material,volume.x, volume.y, volume.z);
 
 			break;
 		case PxGeometryType::eSPHERE:
-			createNewShape<PxSphereGeometry>(prop.radius);
+			createNewShape<PxSphereGeometry>(material,prop.radius);
 			break;
-
+			
 		}
 	}
 
 	template<class T, typename ...Ts>
-	inline void createNewShape(Ts&&...args) {
-		shape = CreateShape(T(forward<Ts>(args)...));
+	inline void createNewShape(PxMaterial* mat,Ts&&...args) {
+		shape = CreateShape(T(forward<Ts>(args)...), mat);
 		geometryType = shape->getGeometryType();
 		createNewRenderItem();
 	}
@@ -62,7 +65,7 @@ public:
 		forceAccum += f;
 	}
 protected:
-	void createNewRenderItem();
+	virtual void createNewRenderItem();
 	// Add force to apply in next integration only
 	// Clears accumulated force
 	inline void clearAccum() {
@@ -76,6 +79,7 @@ protected:
 	RenderItem* renderItem;
 	PxShape* shape;
 	Vector3 volume;
+	PxMaterial* material;
 	double invMass;
 	bool isStatic;
 	bool render;

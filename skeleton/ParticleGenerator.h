@@ -38,6 +38,16 @@ protected:
 		srand((unsigned)time(0));
 
 	};
+
+	ParticleGenerator(Particle* modelParticle, Vector3 originOffset = { 0,0,0 }, double minLifeT = 0, double maxLifeT = 0, ParticleForceRegistry* forceRegistry = nullptr) :
+		_model_particle(modelParticle), originOffset(originOffset), _origin(modelParticle->getPos()), _mean_velocity(modelParticle->getVel()), forceRegistry(forceRegistry),
+		initMeanVelocity(modelParticle->getVel()), initOrigin(modelParticle->getPos()), minLifeTime(minLifeT), maxLifeTime(maxLifeT)
+	{
+		if (!maxLifeTime)maxLifeTime = modelParticle->getLifeTime();
+		mt = mt19937{ random_device()() };
+		srand((unsigned)time(0));
+
+	};
 public:
 
 	~ParticleGenerator() {
@@ -68,8 +78,8 @@ public:
 			for (int i = 0; i < _n_particles; ++i) {
 				if (checkGenerationProb()) { //comproobar para cada particula si hay que generar
 					//prop
-					_model_particle->getPos() = generateRandomPos(_origin);
-					_model_particle->getVel() = generateNewDistribution() * (_mean_velocity);
+					_model_particle->setPos(generateRandomPos(_origin));
+					_model_particle->setVel(generateNewDistribution() * (_mean_velocity));
 					setRandomLifeTime();
 
 					_model_particle->registerRender(); //se renderiza si anteriormente no se ha registrado

@@ -1,20 +1,14 @@
 #include "Particle.h"
 #include <iostream>
 
-Particle::Particle(ParticleProperties properties, bool registerRender, GeometryType geometryType, bool isStatic) :
-	prop(properties), invMass(1 / properties.mass), forceAccum(0), volume(prop.radius, prop.radius, prop.radius), renderItem(nullptr), shape(nullptr), geometryType(geometryType), isStatic(isStatic), render(registerRender)
+Particle::Particle(ParticleProperties properties, bool registerRender, GeometryType geometryType, bool isStatic, PxMaterial* material, Vector3 volume) :
+	prop(properties), invMass(1 / properties.mass), forceAccum(0), volume(volume), renderItem(nullptr), shape(nullptr), geometryType(geometryType), isStatic(isStatic), render(registerRender),material(material)
 {
 	if (fabs(invMass < 1e-10)) prop.damping = 0;
 	createNewShape(geometryType);
 
 }
 
-Particle::Particle(ParticleProperties properties, Vector3 volume, bool registerRender, GeometryType geometryType, bool isStatic) :
-	prop(properties), invMass(1 / properties.mass), forceAccum(0), volume(volume), renderItem(nullptr), shape(nullptr), geometryType(geometryType), isStatic(isStatic), render(registerRender)
-{
-	if (fabs(invMass < 1e-10)) prop.damping = 0;
-	createNewShape(geometryType);
-}
 
 Particle::~Particle() {
 	die();

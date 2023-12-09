@@ -4,6 +4,7 @@ class GaussianParticleGenerator :public ParticleGenerator
 {
 public:
 	GaussianParticleGenerator(GeneratorEffectProperties prop);
+	GaussianParticleGenerator(Particle* modelParticle, Vector3 originOffset, DistributionProp distribution, double minLifeT, double maxLifeT);
 	list<Particle*>generateParticles() override;
 	Vector3 generateNewDistribution()override;
 private:

@@ -15,7 +15,7 @@ protected:
 public:
 	virtual ~Scene();
 	virtual void update(double t);
-	virtual void keyPress(unsigned char key, const PxTransform& camera) ;
+	virtual void keyPress(unsigned char key) ;
 	void addSystem(System* s);
 };
 

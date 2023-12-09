@@ -1,5 +1,6 @@
 #pragma once
 #include "System.h"
+#include "ShooterManager.h"
 #include "Particle.h"
 #include "Firework.h"
 #include "SimpleParticleGenerator.h"
@@ -9,25 +10,24 @@
 #include "WhirlwindsForceGenerator.h"
 #include "ExplosionForceGenerator.h"
 #include "ParticleForceRegistry.h"
-#include "ShooterManager.h"
 #include "AnchoredSpringForceGenerator.h"
 #include "BuoyancyForceGenerator.h"
 #include "RubberBandForceGenerator.h"
+
 
 class ParticleSystem :public System {
 public:
 	// Creates a void system with a det. gravity
 	ParticleSystem(Scene* scene, const Vector3& g = { 0.0f, GRAVITY, 0.0f });
-	~ParticleSystem();
+	virtual ~ParticleSystem();
 	// Integrates the particles and checks for its lifetime, etc!
 	void update(double t) override;
-	void refresh();
-	void keyPress(unsigned char key, const PxTransform& camera);
+	virtual void refresh();
+	virtual void keyPress(unsigned char key) {};
 
-
-	void addParticles(list<Particle*>particlesList);
-	void addGravity(Particle* particle);
-	void addFloating(Particle* particle);
+	virtual void addParticles(list<Particle*>particlesList);
+	virtual void addGravity(Particle* particle);
+	virtual void addFloating(Particle* particle);
 protected:
 	bool hasGravity;
 	Vector3 gravity;
@@ -50,15 +50,9 @@ protected:
 
 
 	void cleanSystem();
+	void resetSystem();
 	// Method to generate a Firework with the appropiate type
 	void generateFirework(bool randomColor, int maxGen, int gen);
-
-	void initForcesTest();
-	void springTest();
-	void rubberBandTest();
-	void slinkyTest();
-	void buoyancyTest();
-	void anchoredSpringTest();
 
 	template <typename T>
 	void initFirework(double prob, int nParticle);

@@ -6,6 +6,12 @@ GaussianParticleGenerator::GaussianParticleGenerator(GeneratorEffectProperties p
 	normal_y(normal_distribution<double>{ prop.distribution.y.first, prop.distribution.y.second }),
 	normal_z(normal_distribution<double>{ prop.distribution.z.first, prop.distribution.z.second })
 {}
+GaussianParticleGenerator::GaussianParticleGenerator(Particle * modelParticle, Vector3 originOffset, DistributionProp distribution,double minLifeT, double maxLifeT):
+	ParticleGenerator(modelParticle,originOffset, minLifeT, maxLifeT),
+	normal_x(normal_distribution<double>{ distribution.x.first, distribution.x.second }),
+	normal_y(normal_distribution<double>{ distribution.y.first, distribution.y.second }),
+	normal_z(normal_distribution<double>{ distribution.z.first, distribution.z.second })
+{}
 list<Particle*> GaussianParticleGenerator::generateParticles()
 {
 	return generalParticleGeneration();

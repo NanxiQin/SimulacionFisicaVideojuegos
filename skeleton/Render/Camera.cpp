@@ -90,12 +90,18 @@ void Camera::handleMotion(int x, int y)
 
 	PxVec3 viewY = mDir.cross(PxVec3(0,1,0)).getNormalized();
 
-	PxQuat qx(PxPi * dx / 180.0f, PxVec3(0,1,0));
-	mDir = qx.rotate(mDir);
-	PxQuat qy(PxPi * dy / 180.0f, viewY);
-	mDir = qy.rotate(mDir);
+	PxVec3 auxDir = mDir;
 
-	mDir.normalize();
+	PxQuat qx(PxPi * dx / 180.0f, PxVec3(0,1,0));
+	auxDir = qx.rotate(auxDir);
+	PxQuat qy(PxPi * dy / 180.0f, viewY);
+	auxDir = qy.rotate(auxDir);
+
+	auxDir.normalize();
+
+	if(auxDir.y>-0.9 && auxDir.y<0.9)
+	mDir = auxDir;
+
 
 	mMouseX = x;
 	mMouseY = y;

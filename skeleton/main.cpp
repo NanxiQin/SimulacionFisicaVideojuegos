@@ -12,8 +12,8 @@
 
 #include <windows.h>
 
-
-std::string display_text = "This is a test";
+std::string display_text = "Game";
+std::string displayTexts[2] = { "1-3 Fireworks | 4 UniformGen | 5 GuassianGen | 6 HoseEffect | 7 FogEffect | 8 RainEffect | 9 MilkyEffect" ,"e wind | r tornado | t explosion | y spring | u anchoredSpring | i rubberBand | o slinky | p buoyancy | z deleteLastGen | x checkGravity | c deleteLastForce" };
 
 
 using namespace physx;
@@ -107,7 +107,7 @@ void cleanupPhysics(bool interactive)
 // Function called when a key is pressed
 void keyPress(unsigned char key, const PxTransform& camera)
 {
-	sceneMng->keyPress(key, camera);
+	sceneMng->keyPress(key);
 	PX_UNUSED(camera);
 
 	switch (toupper(key))

@@ -11,6 +11,6 @@ void Scene::update(double t) {
 void Scene::addSystem(System* s) {
 	systems.push_back(s);
 }
-void Scene::keyPress(unsigned char key, const PxTransform& camera) {
-	for (auto s : systems)s->keyPress(key,camera);
+void Scene::keyPress(unsigned char key) {
+	for (auto s : systems)s->keyPress(key);
  }

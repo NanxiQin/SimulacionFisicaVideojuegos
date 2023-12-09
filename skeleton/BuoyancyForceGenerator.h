@@ -4,7 +4,7 @@ class BuoyancyForceGenerator : public ForceGenerator
 {
 
 public:
-	BuoyancyForceGenerator(Vector3 volume, double density = 10, double k1=0.1,Vector3 surfacePos = {0,0,0},Vector4 color=colorRGB[Blue], double gravity = -GRAVITY);
+	BuoyancyForceGenerator(Vector3 volume, double density = 10, double k1=0.1,Vector3 surfacePos= Vector3(0),Vector4 color=colorRGB[Blue], double gravity = -GRAVITY);
 	~BuoyancyForceGenerator();
 
 	void updateForce(Particle* particle, double t) override;

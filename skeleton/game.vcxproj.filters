@@ -73,6 +73,21 @@
     <ClCompile Include="RubberBandForceGenerator.cpp">
       <Filter>Forces</Filter>
     </ClCompile>
+    <ClCompile Include="RigidBody.cpp">
+      <Filter>RigidBody</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticRigidBody.cpp">
+      <Filter>RigidBody</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleSystemDemo.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="DynamicRigidBody.cpp">
+      <Filter>RigidBody</Filter>
+    </ClCompile>
+    <ClCompile Include="RigidBodySystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Render\Camera.h">
@@ -153,6 +168,21 @@
     <ClInclude Include="RubberBandForceGenerator.h">
       <Filter>Forces</Filter>
     </ClInclude>
+    <ClInclude Include="RigidBody.h">
+      <Filter>RigidBody</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticRigidBody.h">
+      <Filter>RigidBody</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystemDemo.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="DynamicRigidBody.h">
+      <Filter>RigidBody</Filter>
+    </ClInclude>
+    <ClInclude Include="RigidBodySystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">
@@ -175,6 +205,9 @@
     </Filter>
     <Filter Include="Forces">
       <UniqueIdentifier>{3fe1bfca-edb7-4751-99ce-c07aa41ce368}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RigidBody">
+      <UniqueIdentifier>{a69a0c57-d62f-40c1-8198-c413b33fff8b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

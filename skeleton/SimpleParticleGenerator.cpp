@@ -8,6 +8,12 @@ SimpleParticleGenerator::SimpleParticleGenerator(GeneratorEffectProperties prop)
 	uniform_y(uniform_real_distribution<double>{ prop.distribution.y.first, prop.distribution.y.second }),
 	uniform_z(uniform_real_distribution<double>{ prop.distribution.z.first, prop.distribution.z.second }) {}
 
+SimpleParticleGenerator::SimpleParticleGenerator(Particle* modelParticle, Vector3 originOffset, DistributionProp distribution, double minLifeT, double maxLifeT) :
+	ParticleGenerator(modelParticle, originOffset, minLifeT, maxLifeT),
+	uniform_x(uniform_real_distribution<double>{ distribution.x.first, distribution.x.second }),
+	uniform_y(uniform_real_distribution<double>{ distribution.y.first, distribution.y.second }),
+	uniform_z(uniform_real_distribution<double>{ distribution.z.first, distribution.z.second })
+{}
 list<Particle*> SimpleParticleGenerator::generateParticles()
 {
 	return generalParticleGeneration();

@@ -142,15 +142,17 @@ void renderLoop()
 	sCamera = new Camera(PxVec3(50.0f, 50.0f, 50.0f), PxVec3(-0.6f, -0.2f, -0.7f));
 
 	setupDefaultWindow("Simulacion Fisica Videojuegos");
+
+	glutSetCursor(GLUT_CURSOR_NONE); //hide cursor
 	setupDefaultRenderState();
 
 	glutIdleFunc(idleCallback);
 	glutDisplayFunc(renderCallback);
 	glutKeyboardFunc(keyboardCallback);
 	glutMouseFunc(mouseCallback);
-	glutMotionFunc(motionCallback);
+	//glutMotionFunc(motionCallback);
+	glutPassiveMotionFunc(motionCallback);
 	motionCallback(0, 0);
-
 	atexit(exitCallback);
 
 	initPhysics(true);

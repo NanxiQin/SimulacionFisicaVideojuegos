@@ -2,9 +2,9 @@
 #include <iostream>
 
 BuoyancyForceGenerator::BuoyancyForceGenerator(Vector3 volume, double density, double k1, Vector3 surfacePos, Vector4 color, double gravity) :
-	ForceGenerator(BuoyancyForce), density(density), k1(k1), liquidParticle(new Particle({ PxTransform(surfacePos), { 0,0,0 }, 10, 1e6,1, color, -1, 0, NONE }, { volume.x,volume.y,volume.z })), gravity(gravity)
+	ForceGenerator(BuoyancyForce), density(density), k1(k1), liquidParticle(new Particle({ PxTransform(surfacePos), { 0,0,0 }, 10, 1e6,1, color, -1, 0, NONE }, true,PxGeometryType::eBOX,true,nullptr,{ volume.x,volume.y,volume.z })), gravity(gravity)
 {
-	liquidParticle->createNewShape<PxBoxGeometry>(volume.x, volume.y, volume.z);
+	liquidParticle->createNewShape<PxBoxGeometry>(nullptr,volume.x, volume.y, volume.z);
 }
 
 BuoyancyForceGenerator::~BuoyancyForceGenerator()
