@@ -63,7 +63,7 @@ void renderGeometry(const PxGeometryHolder& h, bool wireframe = false)
 		glPushMatrix();
 
 		glScalef(h.box().halfExtents.x, h.box().halfExtents.y, h.box().halfExtents.z);
-		glutSolidCube(1);
+		glutSolidCube(2);
 
 		glPopMatrix();
 			}
@@ -278,7 +278,7 @@ namespace Snippets
 
 		// Setup lighting
 		glEnable(GL_LIGHTING);
-		PxReal ambientColor[] = { 0.0f, 0.1f, 0.2f, 0.0f };
+		PxReal ambientColor[] = { 0.3f, 0.3f, 0.3f, 0.0f };
 		PxReal diffuseColor[] = { 1.0f, 1.0f, 1.0f, 0.0f };
 		PxReal specularColor[] = { 0.0f, 0.0f, 0.0f, 0.0f };
 		PxReal position[] = { 100.0f, 100.0f, 400.0f, 1.0f };

@@ -50,7 +50,7 @@ protected:
 
 
 	void cleanSystem();
-	void resetSystem();
+	virtual void resetSystem();
 	// Method to generate a Firework with the appropiate type
 	void generateFirework(bool randomColor, int maxGen, int gen);
 

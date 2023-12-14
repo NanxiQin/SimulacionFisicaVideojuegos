@@ -13,6 +13,9 @@ public:
 	inline Vector3 getVel()override { return body->getLinearVelocity(); } ;
 	inline void setVel(Vector3 v)override { body->setLinearVelocity(v); };
 	void setTensor(Vector3 t);
+	inline void addForce(Vector3 f) override {
+		body->addForce(f);
+	}
 private:
 	PxRigidDynamic* body;
 	PxMaterial* material;

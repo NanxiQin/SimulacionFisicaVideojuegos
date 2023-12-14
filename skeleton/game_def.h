@@ -49,9 +49,10 @@ namespace game_def {
 	};
 
 #pragma region color
-	enum Color { Red, Orange, Yellow, Green, Blue, Purple, Pink, Brown, Black, White, Grey, TransparentBlue, COLOR_SIZE };
+	enum Color { Red,TransparentPink, Orange, Yellow, Green, Blue, Purple, Pink, Brown, Black, White, Grey, TransparentBlue, COLOR_SIZE };
 	static Vector4 colorRGB[COLOR_SIZE]{
-		{1,0,0,0.2}, //Red
+		{1,0,0,1}, //Red
+		{0.6, 0.3, 0.3,0.5}, //TransparentPink
 		{0.7,0.3,0,1}, //Orange
 		{0.7,0.6,0,3}, //Yellow
 		{0.6,0.7,0,4}, //Green
@@ -75,7 +76,7 @@ namespace game_def {
 		DEFAULT_MASS = 1,
 		DEFAULT_RADIUS= 1,
 
-		PARTICLE_BOUND_DISTANCE = 200.0,
+		PARTICLE_BOUND_DISTANCE = 400.0,
 		GRAVITY = -10.0,
         PI = 3.142857;
 	const Vector3 FLOAT_FORCE = { 0,4,0 };
@@ -99,12 +100,12 @@ namespace game_def {
 
 	static ParticleProperties particleProperties[PARTICLE_TYPE_SIZE]{
 		{PxTransform(0,0,0),{ 0,0,0 },DEFAULT_DAMPING,1,0.5,colorRGB[Red],DEFAULT_LIFETIME,0,NONE},
-		{PxTransform(0,0,0),{ 200,200,200 },0.99,0.5,0.5,colorRGB[Purple],DEFAULT_LIFETIME,0,PISTOL},
+		{PxTransform(0,0,0),{ 300,300,300 },0.99,5,0.8,colorRGB[Purple],DEFAULT_LIFETIME,0,PISTOL},
 		{PxTransform(0,0,0),{ 40,70,40 },0.99,5,5,colorRGB[Black],DEFAULT_LIFETIME,0,ARTILLERY},
 		{PxTransform(0,0,0),{ 10,10,10 },0.9,2,2,colorRGB[Orange],DEFAULT_LIFETIME,0,FIREBALL},
 		{PxTransform(0,0,0),{ 100,100,100 },0.99,0.1,0.1,colorRGB[Blue],DEFAULT_LIFETIME,0,LASER},//No gravity
 		{PxTransform(0,0,0),{ 2,100,2 },0.99,0.5,0.5,colorRGB[White],2,0,FIREWORK},
-		{PxTransform(0,0,0), { 0,0,0 }, 0, 0, 0, colorRGB[White], -1, 0, NONE }
+		{PxTransform(0,0,0), { 0,0,0 }, 0, 0, 0, colorRGB[Grey], -1, 0, NONE }
 	};
 
 #pragma endregion

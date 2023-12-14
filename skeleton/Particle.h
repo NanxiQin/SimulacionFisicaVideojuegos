@@ -61,7 +61,7 @@ public:
 		createNewRenderItem();
 	}
 
-	inline void addForce(Vector3 f) {
+	virtual inline void addForce(Vector3 f) {
 		forceAccum += f;
 	}
 protected:
