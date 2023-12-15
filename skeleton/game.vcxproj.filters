@@ -12,7 +12,7 @@
     <ClCompile Include="ShooterManager.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
-    <ClCompile Include="PlayScene.cpp">
+    <ClCompile Include="DemoScene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
     <ClCompile Include="Particle.cpp">
@@ -101,7 +101,7 @@
     <ClInclude Include="ShooterManager.h">
       <Filter>Systems</Filter>
     </ClInclude>
-    <ClInclude Include="PlayScene.h">
+    <ClInclude Include="DemoScene.h">
       <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="Particle.h">

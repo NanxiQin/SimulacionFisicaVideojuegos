@@ -7,7 +7,7 @@
 #include "core.hpp"
 #include "RenderUtils.hpp"
 #include "callbacks.hpp"
-#include "PlayScene.h"
+#include "DemoScene.h"
 #include <iostream>
 
 #include <windows.h>
@@ -33,7 +33,7 @@ PxPvd* gPvd = NULL;
 PxDefaultCpuDispatcher* gDispatcher = NULL;
 PxScene* gScene = NULL;
 ContactReportCallback gContactReportCallback;
-PlayScene* sceneMng;
+DemoScene* sceneMng;
 
 
 
@@ -61,7 +61,7 @@ void initPhysics(bool interactive)
 	sceneDesc.simulationEventCallback = &gContactReportCallback;
 	gScene = gPhysics->createScene(sceneDesc);
 
-	sceneMng = new PlayScene();
+	sceneMng = new DemoScene();
 
 }
 
@@ -124,6 +124,17 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		break;
 	}
 }
+
+void handleMouse(int button, int state, int x, int y)
+{
+	sceneMng->handleMouse(button, state, x, y);
+}
+
+void handleMotion(int x, int y)
+{
+	sceneMng->handleMotion(x, y);
+}
+
 
 
 void onCollision(physx::PxActor* actor1, physx::PxActor* actor2)

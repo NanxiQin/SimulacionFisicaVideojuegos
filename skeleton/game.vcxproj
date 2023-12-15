@@ -272,7 +272,7 @@
     <ClCompile Include="RenderUtils.cpp" />
     <ClCompile Include="Render\Camera.cpp" />
     <ClCompile Include="Render\Render.cpp" />
-    <ClCompile Include="PlayScene.cpp" />
+    <ClCompile Include="DemoScene.cpp" />
     <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="RigidBodySystem.cpp" />
     <ClCompile Include="RubberBandForceGenerator.cpp" />
@@ -307,7 +307,7 @@
     <ClInclude Include="Render\Camera.h" />
     <ClInclude Include="Render\Render.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="PlayScene.h" />
+    <ClInclude Include="DemoScene.h" />
     <ClInclude Include="RigidBody.h" />
     <ClInclude Include="RigidBodySystem.h" />
     <ClInclude Include="RubberBandForceGenerator.h" />

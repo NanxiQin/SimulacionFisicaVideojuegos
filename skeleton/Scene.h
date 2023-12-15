@@ -16,6 +16,8 @@ public:
 	virtual ~Scene();
 	virtual void update(double t);
 	virtual void keyPress(unsigned char key) ;
+	virtual void handleMouse(int button, int state, int x, int y);
+	virtual void handleMotion(int x, int y);
 	void addSystem(System* s);
 };
 

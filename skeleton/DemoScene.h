@@ -3,15 +3,15 @@
 #include "ParticleSystemDemo.h"
 #include "RigidBodySystem.h"
 using namespace std;
-class PlayScene:public Scene
+class DemoScene:public Scene
 {
 private:
-
 	ParticleSystem* particleSys;
 	ParticleSystemDemo* particleSysDemo;
 	RigidBodySystem* rigidBodySys;
 public:
-	PlayScene();
-
+	DemoScene();
+	void handleMouse(int button, int state, int x, int y) override;
+	void handleMotion(int x, int y)override;
 };
 
