@@ -16,7 +16,7 @@ public:
 	inline void addForce(Vector3 f) override {
 		body->addForce(f);
 	}
-private:
+protected:
 	PxRigidDynamic* body;
 	PxMaterial* material;
 };

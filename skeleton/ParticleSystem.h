@@ -25,9 +25,14 @@ public:
 	virtual void refresh();
 	virtual void keyPress(unsigned char key) {};
 
+	virtual void handleMotion(int x, int y);
+	virtual void handleMouse(int button, int state, int x, int y);
+
 	virtual void addParticles(list<Particle*>particlesList);
 	virtual void addGravity(Particle* particle);
 	virtual void addFloating(Particle* particle);
+
+	void setparticleBoundDistance(Vector3 d) { particleBoundDistance = d; };
 protected:
 	bool hasGravity;
 	Vector3 gravity;
@@ -47,7 +52,7 @@ protected:
 
 	// This generator is only to shoot the firework
 	vector< ParticleGenerator*>firework_generators;
-
+	Vector3 particleBoundDistance;
 
 	void cleanSystem();
 	virtual void resetSystem();
@@ -80,7 +85,7 @@ protected:
 
 
 	inline bool isOutOfBounds(const Vector3& pos) const {
-		return fabs(pos.x) > PARTICLE_BOUND_DISTANCE || fabs(pos.y) > PARTICLE_BOUND_DISTANCE || fabs(pos.z) > PARTICLE_BOUND_DISTANCE;
+		return fabs(pos.x) > particleBoundDistance.x || fabs(pos.y) > particleBoundDistance.y || fabs(pos.z) > particleBoundDistance.z;
 	}
 
 	template<class T>

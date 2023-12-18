@@ -147,7 +147,7 @@ void renderLoop()
 
 	setupDefaultWindow("Simulacion Fisica Videojuegos");
 
-	glutSetCursor(GLUT_CURSOR_NONE); //hide cursor
+	//glutSetCursor(GLUT_CURSOR_NONE); //hide cursor
 	setupDefaultRenderState();
 
 	glutIdleFunc(idleCallback);
@@ -156,9 +156,10 @@ void renderLoop()
 
 	initPhysics(true);
 	glutMouseFunc(mouseCallback);
-	//glutMotionFunc(motionCallback);
-	glutPassiveMotionFunc(motionCallback);
-	motionCallback(0, 0);
+	glutMotionFunc(motionCallback);
+
+	//glutPassiveMotionFunc(motionCallback);
+	//motionCallback(0, 0);
 	atexit(exitCallback);
 	glutMainLoop();
 }

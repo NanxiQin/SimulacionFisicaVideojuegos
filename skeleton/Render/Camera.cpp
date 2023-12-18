@@ -128,6 +128,16 @@ PxVec3 Camera::getDir() const
 	return mDir; 
 }
 
+void Camera::setEye(PxVec3 pos) 
+{
+	 mEye=pos;
+}
+
+void Camera::setDir(PxVec3 dir) 
+{
+	mDir=dir;
+}
+
 
 }
 

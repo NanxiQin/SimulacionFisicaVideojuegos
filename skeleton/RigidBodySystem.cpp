@@ -4,17 +4,17 @@ extern PxScene* gScene;
 
 RigidBodySystem::RigidBodySystem(Scene* scene, const Vector3& g) :ParticleSystem(scene, g)
 {
-	rigidBodyDemo();
+	//rigidBodyDemo();
 }
 
 void RigidBodySystem::update(double t)
 {
 	ParticleSystem::update(t);
 
-	crosshair.first->setPos(GetCamera()->getEye() + GetCamera()->getDir());
-	crosshair.first->setRot(-GetCamera()->getTransform().q);
-	crosshair.second->setPos(GetCamera()->getEye() + GetCamera()->getDir());
-	crosshair.second->setRot(-GetCamera()->getTransform().q);
+	//crosshair.first->setPos(GetCamera()->getEye() + GetCamera()->getDir());
+	//crosshair.first->setRot(-GetCamera()->getTransform().q);
+	//crosshair.second->setPos(GetCamera()->getEye() + GetCamera()->getDir());
+	//crosshair.second->setRot(-GetCamera()->getTransform().q);
 }
 
 void RigidBodySystem::keyPress(unsigned char key)

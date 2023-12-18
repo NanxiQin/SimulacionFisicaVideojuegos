@@ -2,7 +2,9 @@
 #include <iostream>
 
 ParticleSystem::ParticleSystem(Scene* scene, const Vector3& g) :
-	System(scene), shooter(new ShooterManager(this)), gravity(g), forceRegistry(new ParticleForceRegistry()), gravityForce(new GravityForceGenerator(g)), floatingForce(new GravityForceGenerator(FLOAT_FORCE)), hasGravity(true)
+	System(scene), shooter(new ShooterManager(this)), gravity(g), forceRegistry(new ParticleForceRegistry()), 
+	gravityForce(new GravityForceGenerator(g)), floatingForce(new GravityForceGenerator(FLOAT_FORCE)), hasGravity(true),
+	particleBoundDistance({PARTICLE_BOUND_DISTANCE ,PARTICLE_BOUND_DISTANCE, PARTICLE_BOUND_DISTANCE })
 {
 	forceGenerators.push_back(gravityForce);
 	forceGenerators.push_back(floatingForce);
@@ -25,15 +27,12 @@ void ParticleSystem::update(double t)
 	for (auto g : particleGenerators)
 		addParticles(g->generateParticles());
 
-	auto it = particles.begin();
-	while (it != particles.end()) {
-		auto particle = *it; //hacerlo con un iterador auxiliar, por si se invalida durante el bucle (por borrarlo)
-		++it;
+	for (auto p : particles) {
+		auto particle = p; //hacerlo con un iterador auxiliar, por si se invalida durante el bucle (por borrarlo)
 		particle->update(t);
 		//chequear deathzone
 		if (isOutOfBounds(particle->getPos())) particle->setAlive(false);
 	}
-
 }
 
 void ParticleSystem::refresh()
@@ -61,6 +60,20 @@ void ParticleSystem::refresh()
 		}
 		else ++f_it;
 
+	}
+}
+
+void ParticleSystem::handleMotion(int x, int y)
+{
+	for (auto p : particles) {
+		p->handleMotion(x, y);
+	}
+}
+
+void ParticleSystem::handleMouse(int button, int state, int x, int y)
+{
+	for (auto p : particles) {
+		p->handleMouse(button, state,x, y);
 	}
 }
 

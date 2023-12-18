@@ -12,6 +12,9 @@ public:
 
 	void die() override;
 	void update(double t)override;
+	virtual void handleMouse(int button, int state, int x, int y) {};
+	virtual void handleMotion(int x, int y) {};
+
 	virtual Particle* clone(bool render = true)const;
 	virtual void registerRender();
 

@@ -8,6 +8,7 @@
 #include "RenderUtils.hpp"
 #include "callbacks.hpp"
 #include "DemoScene.h"
+#include "GameScene.h"
 #include <iostream>
 
 #include <windows.h>
@@ -33,7 +34,7 @@ PxPvd* gPvd = NULL;
 PxDefaultCpuDispatcher* gDispatcher = NULL;
 PxScene* gScene = NULL;
 ContactReportCallback gContactReportCallback;
-DemoScene* sceneMng;
+Scene* sceneMng;
 
 
 
@@ -61,7 +62,7 @@ void initPhysics(bool interactive)
 	sceneDesc.simulationEventCallback = &gContactReportCallback;
 	gScene = gPhysics->createScene(sceneDesc);
 
-	sceneMng = new DemoScene();
+	sceneMng = new GameScene();
 
 }
 

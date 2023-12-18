@@ -9,11 +9,14 @@ DemoScene::DemoScene() : Scene() {
 
 void DemoScene::handleMouse(int button, int state, int x, int y)
 {
+	Scene::handleMouse(button, state, x, y);
 	GetCamera()->handleMouse(button, state, x, y);
+
 }
 
 void DemoScene::handleMotion(int x, int y)
 {
+	Scene::handleMotion(x, y);
 	GetCamera()->handleMotion(x, y);
 }
 
