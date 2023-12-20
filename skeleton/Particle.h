@@ -31,6 +31,7 @@ public:
 	inline double getRadius()const { return prop.radius; };
 	inline double getVolume()const { return { volume.x * volume.y * volume.z }; };
 	inline Vector3 getScale()const { return volume; };
+	PxShape* getShape() { return shape; };
 
 	void setDamping(double damp) { prop.damping = damp; }
 	void setStatic(bool _static) { isStatic = _static; };

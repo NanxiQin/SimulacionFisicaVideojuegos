@@ -10,6 +10,8 @@ private:
 	RigidBodySystem* rigidBodySys;
 	Player* player;
 	Particle* backWall;
+	Particle* rightWall;
+	Particle* leftWall;
 	void initGame();
 	
 public:

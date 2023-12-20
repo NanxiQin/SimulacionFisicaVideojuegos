@@ -1,8 +1,10 @@
 #include "Player.h"
 #include <iostream>
-Player::Player(Vector3 pos, Color color, double radius, double mass) :
-	DynamicRigidBody({ PxTransform(pos),{0,0,0},0.4,mass,radius,colorRGB[color],-1,0,NONE })
+Player::Player(Vector3 pos, Color color, double radius, double mass, PxFilterData* filter) :
+	DynamicRigidBody({ PxTransform(pos),{0,0,0},0.4,mass,radius,colorRGB[color],-1,0,NONE }, true, nullptr, GeometryType::eSPHERE, { 10,10,10 }, Vector3(-1), filter)
 {
+	//body->setWakeCounter(100000);
+
 }
 
 
@@ -24,7 +26,9 @@ void Player::handleMotion(int x, int y)
 }
 void Player::update(double t)
 {
-	body->addForce(Vector3(0,0,1) * prop.mass*1250*t);
+	//std::cout << body->getLinearVelocity().z << " " << endl;
+	if (body->getLinearVelocity().z < 20)
+	body->addForce(Vector3(0,0,1) * prop.mass*650*t);
 }
 void Player::handleMouse(int button, int state, int x, int y)
 {

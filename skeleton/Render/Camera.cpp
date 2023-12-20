@@ -96,7 +96,6 @@ void Camera::handleMotion(int x, int y)
 	auxDir = qx.rotate(auxDir);
 	PxQuat qy(PxPi * dy / 180.0f, viewY);
 	auxDir = qy.rotate(auxDir);
-
 	auxDir.normalize();
 
 	if(auxDir.y>-0.9 && auxDir.y<0.9)

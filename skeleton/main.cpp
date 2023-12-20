@@ -38,6 +38,35 @@ Scene* sceneMng;
 
 
 
+// Define collision groups and masks
+const PxU32 CollisionGroupWall = 1 << 0;      // Collision group for the wall
+const PxU32 CollisionGroupSphereA = 1 << 1;   // Collision group for sphere A
+const PxU32 CollisionGroupOther = 1 << 2;     // Collision group for other objects
+
+
+// Create collision filtering shader callback
+PxFilterFlags CustomFilterShader(
+	PxFilterObjectAttributes attributes0, PxFilterData filterData0,
+	PxFilterObjectAttributes attributes1, PxFilterData filterData1,
+	PxPairFlags& pairFlags, const void* constantBlock, PxU32 constantBlockSize) {
+
+	// Collision filtering logic
+	if ((filterData0.word0 == CollisionGroupWall && filterData1.word0 == CollisionGroupSphereA) ||
+		(filterData0.word0 == CollisionGroupSphereA && filterData1.word0 == CollisionGroupWall)||
+		(filterData0.word0 == CollisionGroupOther && filterData1.word0 == CollisionGroupOther) ||
+		(filterData0.word0 == CollisionGroupOther && filterData1.word0 == CollisionGroupSphereA) ||
+		(filterData0.word0 == CollisionGroupSphereA && filterData1.word0 == CollisionGroupOther)) {
+		// Collide only if between wall and sphere A
+		pairFlags = PxPairFlag::eCONTACT_DEFAULT;  // Define collision behavior
+		return PxFilterFlags(); // Return flags indicating collision is allowed
+	}
+
+	// For other combinations, disable collision
+	pairFlags = PxPairFlag::eTRIGGER_DEFAULT;
+	return PxFilterFlag::eKILL;
+}
+
+
 // Initialize physics engine
 void initPhysics(bool interactive)
 {
@@ -58,7 +87,7 @@ void initPhysics(bool interactive)
 	sceneDesc.gravity = PxVec3(0.0f, -9.8f, 0.0f);
 	gDispatcher = PxDefaultCpuDispatcherCreate(2);
 	sceneDesc.cpuDispatcher = gDispatcher;
-	sceneDesc.filterShader = contactReportFilterShader;
+	sceneDesc.filterShader = CustomFilterShader;
 	sceneDesc.simulationEventCallback = &gContactReportCallback;
 	gScene = gPhysics->createScene(sceneDesc);
 

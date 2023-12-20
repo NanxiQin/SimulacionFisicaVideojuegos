@@ -2,8 +2,10 @@
 extern PxPhysics* gPhysics;
 extern PxScene* gScene;
 
-StaticRigidBody::StaticRigidBody(ParticleProperties prop, PxMaterial* material, GeometryType geometryType, Vector3 volume) :RigidBody(prop, true, material, geometryType, volume)
+StaticRigidBody::StaticRigidBody(ParticleProperties prop, PxMaterial* material, PxFilterData* filter, GeometryType geometryType, Vector3 volume) :RigidBody(prop, true, material, geometryType, volume)
 {
+	if (filter != nullptr)
+		shape->setSimulationFilterData(*filter);
 	body = gPhysics->createRigidStatic(PxTransform(prop.transform.p));
 	body->attachShape(*shape);
 	render = true;

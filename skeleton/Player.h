@@ -7,7 +7,7 @@ class Player :public DynamicRigidBody
 		double y;
 	};
 public:
-	Player(Vector3 pos,Color color,double radius,double mass);
+	Player(Vector3 pos,Color color,double radius,double mass,PxFilterData* filter);
 	void handleMouse(int button, int state, int x, int y) override;
 	void handleMotion(int x, int y)override;
 	void update(double t)override;
