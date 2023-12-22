@@ -23,7 +23,7 @@ void ParticleSystem::update(double t)
 	forceRegistry->updateForces(t);
 	for (auto g : forceGenerators) g->updateTime(t);
 
-	//generar nuevas partículasS
+	//generar nuevas partículas
 	for (auto g : particleGenerators)
 		addParticles(g->generateParticles());
 
@@ -60,6 +60,20 @@ void ParticleSystem::refresh()
 		}
 		else ++f_it;
 
+	}
+}
+
+void ParticleSystem::keyPress(unsigned char key)
+{
+	for (auto p : particles) {
+		p->keyPress(key);
+	}
+}
+
+void ParticleSystem::keyRelease(unsigned char key)
+{
+	for (auto p : particles) {
+		p->keyRelease(key);
 	}
 }
 
@@ -119,9 +133,6 @@ void ParticleSystem::resetSystem()
 }
 
 
-
-
-
 template <typename T>
 void ParticleSystem::initFirework(double prob, int nParticle)
 {
@@ -156,6 +167,11 @@ void ParticleSystem::addGravity(Particle* particle)
 void ParticleSystem::addFloating(Particle* particle)
 {
 	if (particle != nullptr)forceRegistry->addParticleRegistry(floatingForce, particle);
+}
+
+void ParticleSystem::addForcetoParticle(ForceGenerator* fg, Particle* p)
+{
+	forceRegistry->addParticleRegistry(fg, p);
 }
 
 void ParticleSystem::addForcetoAllParticlegenerators(list<ForceGenerator*> fg)

@@ -18,6 +18,7 @@ physx::PxFilterFlags contactReportFilterShader(physx::PxFilterObjectAttributes a
 		| physx::PxPairFlag::eNOTIFY_TOUCH_FOUND
 		| physx::PxPairFlag::eNOTIFY_TOUCH_PERSISTS
 		| physx::PxPairFlag::eNOTIFY_CONTACT_POINTS;
+
 	return physx::PxFilterFlag::eDEFAULT;
 }
 

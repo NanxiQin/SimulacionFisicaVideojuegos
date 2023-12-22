@@ -50,6 +50,13 @@ PxFilterFlags CustomFilterShader(
 	PxFilterObjectAttributes attributes1, PxFilterData filterData1,
 	PxPairFlags& pairFlags, const void* constantBlock, PxU32 constantBlockSize) {
 
+	PX_UNUSED(attributes0);
+	PX_UNUSED(attributes1);
+	PX_UNUSED(filterData0);
+	PX_UNUSED(filterData1);
+	PX_UNUSED(constantBlockSize);
+	PX_UNUSED(constantBlock);
+
 	// Collision filtering logic
 	if ((filterData0.word0 == CollisionGroupWall && filterData1.word0 == CollisionGroupSphereA) ||
 		(filterData0.word0 == CollisionGroupSphereA && filterData1.word0 == CollisionGroupWall)||
@@ -57,13 +64,17 @@ PxFilterFlags CustomFilterShader(
 		(filterData0.word0 == CollisionGroupOther && filterData1.word0 == CollisionGroupSphereA) ||
 		(filterData0.word0 == CollisionGroupSphereA && filterData1.word0 == CollisionGroupOther)) {
 		// Collide only if between wall and sphere A
-		pairFlags = PxPairFlag::eCONTACT_DEFAULT;  // Define collision behavior
-		return PxFilterFlags(); // Return flags indicating collision is allowed
+		pairFlags = PxPairFlag::eSOLVE_CONTACT |physx::PxPairFlag::eDETECT_DISCRETE_CONTACT
+			| physx::PxPairFlag::eNOTIFY_TOUCH_FOUND
+			| physx::PxPairFlag::eNOTIFY_TOUCH_PERSISTS
+			| physx::PxPairFlag::eNOTIFY_CONTACT_POINTS;  // Define collision behavior
+		return physx::PxFilterFlag::eDEFAULT; // Return flags indicating collision is allowed
 	}
 
 	// For other combinations, disable collision
 	pairFlags = PxPairFlag::eTRIGGER_DEFAULT;
-	return PxFilterFlag::eKILL;
+	return physx::PxFilterFlag::eKILL;
+
 }
 
 
@@ -84,9 +95,10 @@ void initPhysics(bool interactive)
 
 	// For Solid Rigids +++++++++++++++++++++++++++++++++++++
 	PxSceneDesc sceneDesc(gPhysics->getTolerancesScale());
-	sceneDesc.gravity = PxVec3(0.0f, -9.8f, 0.0f);
+	sceneDesc.gravity = PxVec3(0.0f, GRAVITY, 0.0f);
 	gDispatcher = PxDefaultCpuDispatcherCreate(2);
 	sceneDesc.cpuDispatcher = gDispatcher;
+	//sceneDesc.filterShader = contactReportFilterShader;
 	sceneDesc.filterShader = CustomFilterShader;
 	sceneDesc.simulationEventCallback = &gContactReportCallback;
 	gScene = gPhysics->createScene(sceneDesc);
@@ -155,6 +167,11 @@ void keyPress(unsigned char key, const PxTransform& camera)
 	}
 }
 
+void keyRelease(unsigned char key)
+{
+	sceneMng->keyRelease(key);
+}
+
 void handleMouse(int button, int state, int x, int y)
 {
 	sceneMng->handleMouse(button, state, x, y);
@@ -166,11 +183,11 @@ void handleMotion(int x, int y)
 }
 
 
-
 void onCollision(physx::PxActor* actor1, physx::PxActor* actor2)
 {
-	PX_UNUSED(actor1);
-	PX_UNUSED(actor2);
+	//PX_UNUSED(actor1);
+	//PX_UNUSED(actor2);
+	sceneMng->onCollision(actor1, actor2);
 }
 
 

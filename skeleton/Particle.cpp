@@ -9,7 +9,6 @@ Particle::Particle(ParticleProperties properties, bool registerRender, GeometryT
 
 }
 
-
 Particle::~Particle() {
 	die();
 }

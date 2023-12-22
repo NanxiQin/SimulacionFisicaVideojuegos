@@ -23,7 +23,8 @@ public:
 	// Integrates the particles and checks for its lifetime, etc!
 	void update(double t) override;
 	virtual void refresh();
-	virtual void keyPress(unsigned char key) {};
+	virtual void keyPress(unsigned char key) ;
+	virtual void keyRelease(unsigned char key) ;
 
 	virtual void handleMotion(int x, int y);
 	virtual void handleMouse(int button, int state, int x, int y);
@@ -32,7 +33,44 @@ public:
 	virtual void addGravity(Particle* particle);
 	virtual void addFloating(Particle* particle);
 
+	void addForcetoParticle(ForceGenerator* fg, Particle* p);
 	void setparticleBoundDistance(Vector3 d) { particleBoundDistance = d; };
+
+	void addForcetoAllParticles(list <ForceGenerator*> fg);
+
+
+	void deleteAllParticleGenerators();
+	void deleteParticleGenerator(ParticleGenerator* gen);
+	void deleteForceGenerator(ForceGenerator* fg);
+	void addForcetoAllParticlegenerators(list <ForceGenerator*> fg);
+
+	void deregisterForceGenerator(ForceGenerator* fg);
+	void deregisterForceGeneratorFromGen(ForceGenerator* fg, ParticleGenerator* gen);
+	template<class T>
+	inline T* createGenerator(bool addTolist, GeneratorEffectType type = DefaultEffect, Vector3 pos = { 0,0,0 }, Color color = COLOR_SIZE, DistributionProp distribution = generatorEffect[DefaultEffect].distribution,double minLife=-2,double maxLife=-2) {
+		GeneratorEffectProperties g = generatorEffect[type];
+		if (color != COLOR_SIZE)  g.model.color = colorRGB[color];
+		if (pos != Vector3(0, 0, 0)) g.model.transform = PxTransform(pos);
+		if (distribution != generatorEffect[DefaultEffect].distribution) g.distribution = distribution;
+		if (minLife !=-2) g.minLifeTime = minLife;
+		if (maxLife !=-2) g.maxLifeTime = maxLife;
+
+		if (typeid(T) == typeid(GaussianParticleGenerator)) conversionUniformToGaussian(g.distribution);
+
+		auto gen = new T(g);
+		gen->addForceRegistry(forceRegistry);
+		if (addTolist)
+			particleGenerators.push_back(gen);
+		return gen;
+	}	
+	
+	template<class T, typename ...Ts>
+	inline T* createForceGenerators(Ts&&...args) {
+		T* fg = new T(forward<Ts>(args)...);
+		forceGenerators.push_back(fg);
+		return fg;
+	}
+
 protected:
 	bool hasGravity;
 	Vector3 gravity;
@@ -62,23 +100,7 @@ protected:
 	template <typename T>
 	void initFirework(double prob, int nParticle);
 	void createFireworkGenerators();
-	
-	template<class T, typename ...Ts>
-	inline T* createForceGenerators(Ts&&...args) {
-		T* fg = new T(forward<Ts>(args)...);
-		forceGenerators.push_back(fg);
-		return fg;
-	}
 
-	void addForcetoAllParticles(list <ForceGenerator*> fg);
-
-	void deleteAllParticleGenerators();
-	void deleteParticleGenerator(ParticleGenerator* gen);
-	void deleteForceGenerator(ForceGenerator* fg);
-	void addForcetoAllParticlegenerators(list <ForceGenerator*> fg);
-
-	void deregisterForceGenerator(ForceGenerator* fg);
-	void deregisterForceGeneratorFromGen(ForceGenerator* fg, ParticleGenerator* gen);
 
 	//! This is used currently in the Fireworks to spread more Fireworks!
 	void onParticleDeath(Particle* p);
@@ -88,21 +110,7 @@ protected:
 		return fabs(pos.x) > particleBoundDistance.x || fabs(pos.y) > particleBoundDistance.y || fabs(pos.z) > particleBoundDistance.z;
 	}
 
-	template<class T>
-	inline T* createGenerator(bool addTolist, GeneratorEffectType type = DefaultEffect, Vector3 pos = { 0,0,0 }, Color color = COLOR_SIZE, DistributionProp distribution = generatorEffect[DefaultEffect].distribution) {
-		GeneratorEffectProperties g = generatorEffect[type];
-		if (color != COLOR_SIZE)  g.model.color = colorRGB[color];
-		if (pos != Vector3(0, 0, 0)) g.model.transform = PxTransform(pos);
-		if (distribution != generatorEffect[DefaultEffect].distribution) g.distribution = distribution;
 
-		if (typeid(T) == typeid(GaussianParticleGenerator)) conversionUniformToGaussian(g.distribution);
-		
-		auto gen = new T(g);
-		gen->addForceRegistry(forceRegistry);
-		if (addTolist)
-			particleGenerators.push_back(gen);
-		return gen;
-	}
 	void conversionUniformToGaussian(DistributionProp& d) {
 		d.x.first = (d.x.first + d.x.second) / 2; //conversión de min a media
 		d.x.second = abs(d.x.second - d.x.first);//conversión de max a varianza

@@ -15,6 +15,7 @@ DynamicRigidBody::DynamicRigidBody(ParticleProperties prop, bool registerRenderi
 	body->setAngularVelocity({ 0,0,0 });
 
 	body->attachShape(*shape);
+	
 	gScene->addActor(*body);
 	body->setWakeCounter(100000);
 	if(registerRendering) registerRender();

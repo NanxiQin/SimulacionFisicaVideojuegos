@@ -277,6 +277,7 @@
     <ClCompile Include="DemoScene.cpp" />
     <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="RigidBodySystem.cpp" />
+    <ClCompile Include="RigidBodySystemDemo.cpp" />
     <ClCompile Include="RubberBandForceGenerator.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="ShooterManager.cpp" />
@@ -314,6 +315,7 @@
     <ClInclude Include="DemoScene.h" />
     <ClInclude Include="RigidBody.h" />
     <ClInclude Include="RigidBodySystem.h" />
+    <ClInclude Include="RigidBodySystemDemo.h" />
     <ClInclude Include="RubberBandForceGenerator.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="ShooterManager.h" />

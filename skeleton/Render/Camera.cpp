@@ -75,7 +75,18 @@ bool Camera::handleKey(unsigned char key, int x, int y, float speed)
 	}
 	return true;
 }
+void Camera::keyPress(unsigned char key)
+{
 
+	/*PxVec3 viewY = mDir.cross(PxVec3(0, 1, 0)).getNormalized();
+	switch (key)
+	{
+	case 'w':mEye += mDir * 2.0f * 1;break;
+	case 's':mEye -= mDir * 2.0f * 1;break;
+	case 'a':mEye -= viewY * 2.0f * 1;break;
+	case 'd':mEye += viewY * 2.0f * 1;break;
+	}*/
+}
 void Camera::handleAnalogMove(float x, float y)
 {
 	PxVec3 viewY = mDir.cross(PxVec3(0,1,0)).getNormalized();
@@ -134,7 +145,7 @@ void Camera::setEye(PxVec3 pos)
 
 void Camera::setDir(PxVec3 dir) 
 {
-	mDir=dir;
+	mDir=dir.getNormalized();
 }
 
 

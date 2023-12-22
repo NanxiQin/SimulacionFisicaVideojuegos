@@ -16,6 +16,7 @@ public:
 	inline void addForce(Vector3 f) override {
 		body->addForce(f);
 	}
+	PxActor* getActor() { return body; }
 protected:
 	PxRigidDynamic* body;
 	PxMaterial* material;

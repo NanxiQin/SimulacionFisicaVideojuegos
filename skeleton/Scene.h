@@ -16,8 +16,10 @@ public:
 	virtual ~Scene();
 	virtual void update(double t);
 	virtual void keyPress(unsigned char key) ;
+	virtual void keyRelease(unsigned char key) ;
 	virtual void handleMouse(int button, int state, int x, int y);
 	virtual void handleMotion(int x, int y);
+	virtual void onCollision(physx::PxActor* actor1, physx::PxActor* actor2) {};
 	void addSystem(System* s);
 };
 

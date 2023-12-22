@@ -9,14 +9,16 @@ void WindForceGenerator::updateForce(Particle* particle, double t)
 	if (fabs(particle->getInvMass()) < 1e-10) return;
 
 	auto pPos = particle->getPos();
-	if (fabs(pPos.x) > windArea.x || fabs(pPos.y) > windArea.y || fabs(pPos.z) > windArea.y) return; //si está fuera del área
+	if (fabs(pPos.x) > windArea.x || fabs(pPos.y) > windArea.y || fabs(pPos.z) > windArea.z) return; //si está fuera del área
 
 	double areaEffe = 4 * PI * pow(particle->getRadius(), 2); //área efectiva del objeto que se enfrenta al viento 
 	k2 = areaEffe * dragCoef * airDensity;
 
 	Vector3 v = windVel - particle->getVel();
 	// Apply the wind force
-	Vector3 windF = (k1 + k2 * v.magnitude()) * v;
-	particle->addForce(windF);
+	Vector3 windF = (k1*v + k2 * abs(v.magnitude())*v);
+
+	if (abs(windF.x) < 1e+06 && abs(windF.y) < 1e+06 && abs(windF.z) < 1e+06)
+		particle->addForce(windF);
 
 }
