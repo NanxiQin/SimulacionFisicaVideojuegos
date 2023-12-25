@@ -1,8 +1,8 @@
 #include "Player.h"
 #include <iostream>
 #include "GameScene.h"
-Player::Player(GameScene* scene, Vector3 pos, PxMaterial* mat, Color color, double radius, double mass, PxFilterData* filter) :
-	DynamicRigidBody({ PxTransform(pos),{0,0,0},0.4,mass,radius,colorRGB[color],-1,0,NONE }, true, mat, GeometryType::eSPHERE, { 10,10,10 }, Vector3(-1), filter),
+Player::Player(GameScene* scene, Vector3 pos, PxMaterial* mat, Color color, double radius, double mass, PxFilterData filter) :
+	DynamicRigidBody({ PxTransform(pos),{0,0,0},0.4,mass,radius,colorRGB[color],-1,0,NONE }, true, mat, GeometryType::eSPHERE, Vector3(0), Vector3(-1), filter),
 	scene(scene), keyPressed(' ')
 {
 	//body->setWakeCounter(100000);
@@ -20,8 +20,9 @@ void Player::handleMotion(int x, int y)
 	//if (abs((getVel() - f).magnitude())- abs(getVel().magnitude()) >500 )
 	//	setVel(Vector3(0));
 	//f*= 10;
-	if (body->getLinearVelocity().magnitude() < 800)
-		body->addForce(f * 100 * prop.mass);
+	//cout << body->getLinearVelocity().magnitude() << endl;
+	if (body->getLinearVelocity().magnitude() < 300)
+		body->addForce(f * 300 * prop.mass);
 	//setVel(f);
 	originForce.x = x;
 	originForce.y = y;
@@ -29,10 +30,8 @@ void Player::handleMotion(int x, int y)
 void Player::update(double t)
 {
 	DynamicRigidBody::update(t);
-	//std::cout << body->getLinearVelocity().z << " " << endl;
-	/*if (body->getLinearVelocity().z < 20)
-	body->addForce(Vector3(0,0,1) * prop.mass*650*t);*/
 
+	//Manage player movement if a key is pressed
 	Vector3 dir = Vector3(0);
 	switch (keyPressed)
 	{

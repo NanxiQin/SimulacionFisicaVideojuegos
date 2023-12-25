@@ -88,11 +88,15 @@
     <ClCompile Include="RigidBodySystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp" />
     <ClCompile Include="GameScene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="RigidBodySystemDemo.cpp" />
+    <ClCompile Include="RigidBodySystemDemo.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Entitites</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Render\Camera.h">
@@ -188,11 +192,15 @@
     <ClInclude Include="RigidBodySystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
-    <ClInclude Include="Player.h" />
     <ClInclude Include="GameScene.h">
       <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="RigidBodySystemDemo.h" />
+    <ClInclude Include="RigidBodySystemDemo.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Entitites</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">

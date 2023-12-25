@@ -11,20 +11,20 @@ namespace game_def {
 		shoot_Fireball = 'h',
 		shoot_Laser = 'j',
 
-		add_Uniwind='e',
-		add_Windwhirl ='r',
-		add_Explosion='t',
+		add_Uniwind = 'e',
+		add_Windwhirl = 'r',
+		add_Explosion = 't',
 
-		add_springTest='y',
-		add_anchoredSpringTest='u',
-		add_rubberbandTest='i',
-		add_slinkyTest='o',
-		add_buoyancyTest='p',
+		add_springTest = 'y',
+		add_anchoredSpringTest = 'u',
+		add_rubberbandTest = 'i',
+		add_slinkyTest = 'o',
+		add_buoyancyTest = 'p',
 
 		shoot_Firework1 = '1',
 		shoot_Firework2 = '2',
 		shoot_Firework3 = '3',
-		
+
 		add_UniformGen = '4',
 		add_GaussianGen = '5',
 
@@ -37,48 +37,48 @@ namespace game_def {
 		checkGravity = 'x',
 		deleteLastForceGen = 'c',
 
-		increase='l',
-		decrease='k',
+		increase = 'l',
+		decrease = 'k',
 
 		increaseMass = 'm',
 		decreaseMass = 'n',
-		
+
 		increaseVolume = 'b',
 		decreaseVolume = 'v'
 
 	};
 
 #pragma region color
-	enum Color { Red,TransparentPink, Orange, Yellow, Green, Blue, Purple, Pink, Brown, Black, White, Grey, TransparentBlue, COLOR_SIZE };
+	enum Color { Red, Orange, Yellow, Green, Blue, Purple, Pink, Brown, Black, White, Grey, TransparentBlue, TransparentPink, COLOR_SIZE };
 	static Vector4 colorRGB[COLOR_SIZE]{
-		{1,0,0,1}, //Red
-		{0.6, 0.3, 0.3,0.5}, //TransparentPink
+		{0.5,0,0,1}, //Red
 		{0.7,0.3,0,1}, //Orange
 		{0.7,0.6,0,3}, //Yellow
 		{0.6,0.7,0,4}, //Green
 		{0.5,0.5,0.9,1}, //Blue
 		{0.5,0.2,0.5,1}, //Purple
-		{0.6, 0.3, 0.3, 1}, //Pink
+		{0.5, 0.2, 0.2, 1}, //Pink
 		{1,1,0.5,1}, //Brown
 		{0.1,0.1,0.1,1}, //Black
 		{1,1,1,1},//White
-		{0.5,0.5,0.5,1},//Grey
-		{0.5,0.5,0.9,0.3}//Blue
+		{0.4,0.4,0.4,1},//Grey
+		{0.5,0.5,0.9,0.3},//TransparentBlue
+		{0.6, 0.3, 0.3,0.5}//TransparentPink
 	};
 #pragma endregion
 
 #pragma region particle
 
-	enum ParticleType { NONE, PISTOL, ARTILLERY, FIREBALL, LASER, FIREWORK,STATIC, PARTICLE_TYPE_SIZE };
+	enum ParticleType { NONE, PISTOL, ARTILLERY, FIREBALL, LASER, FIREWORK, STATIC, PARTICLE_TYPE_SIZE };
 	const double
 		DEFAULT_DAMPING = 0.998,
 		DEFAULT_LIFETIME = 5,
 		DEFAULT_MASS = 1,
-		DEFAULT_RADIUS= 1,
+		DEFAULT_RADIUS = 1,
 
 		PARTICLE_BOUND_DISTANCE = 400.0,
 		GRAVITY = -10.0,
-        PI = 3.142857;
+		PI = 3.142857;
 	const Vector3 FLOAT_FORCE = { 0,4,0 };
 
 	struct ParticleProperties {
@@ -93,11 +93,6 @@ namespace game_def {
 		ParticleType type;
 	};
 
-
-	extern int particleNum[PARTICLE_TYPE_SIZE];;
-	static int particleMaxNum[PARTICLE_TYPE_SIZE]{ 800,10,10,10,10,700 };
-
-
 	static ParticleProperties particleProperties[PARTICLE_TYPE_SIZE]{
 		{PxTransform(0,0,0),{ 0,0,0 },DEFAULT_DAMPING,1,0.5,colorRGB[Red],DEFAULT_LIFETIME,0,NONE},
 		{PxTransform(0,0,0),{ 300,300,300 },0.99,5,0.8,colorRGB[Purple],DEFAULT_LIFETIME,0,PISTOL},
@@ -108,6 +103,10 @@ namespace game_def {
 		{PxTransform(0,0,0), { 0,0,0 }, 0, 0, 0, colorRGB[Grey], -1, 0, NONE }
 	};
 
+	extern int particleNum[PARTICLE_TYPE_SIZE];;
+	static int particleMaxNum[PARTICLE_TYPE_SIZE]{ 1500,10,10,10,10,700,100 };
+
+
 #pragma endregion
 
 #pragma region projectile
@@ -117,7 +116,7 @@ namespace game_def {
 
 
 #pragma region particle generator
-	enum GeneratorEffectType { DefaultEffect,NeutralEffect, HoseEffect, FogEffect, RainEffect, MilkyWayEffect,FireworkEffect, GeneratorEffect_SIZE };
+	enum GeneratorEffectType { DefaultEffect, NeutralEffect, HoseEffect, FogEffect, RainEffect, MilkyWayEffect, FireworkEffect, GeneratorEffect_SIZE };
 
 	struct DistributionProp {
 		pair<double, double> x;
@@ -147,10 +146,49 @@ namespace game_def {
 		{{PxTransform(0,0,0),{ 5,20,5 },0.99,0.2,0.02,colorRGB[Blue],4,0,FIREWORK},{ 0,0,0 },{ {-3,3},{1,2},{-3,3}},1,1.5},
 	};
 
-	const int FIREWORK_MAX_GEN=5;
+	const int FIREWORK_MAX_GEN = 5;
 
 #pragma endregion
 
-	enum ForceGeneratorType { GravityForce,WindForce,WindWhirlForce,ExplosionForce,SpringForce,RubberBand,BuoyancyForce, ForceGenerator_SIZE };
 
+#pragma region force_generator
+	enum ForceGeneratorType { GravityForce, WindForce, WindWhirlForce, ExplosionForce, SpringForce, RubberBand, BuoyancyForce, ForceGenerator_SIZE };
+#pragma endregion
+
+#pragma region collision_filter
+	// Define collision groups and masks
+	const PxU32 CollisionGroupOther = 1 << 0;     // Collision group for other objects
+	const PxU32 CollisionGroupBackWall = 1 << 1;  // Collision group for the wall
+	const PxU32 CollisionGroupPlayer = 1 << 2;   // Collision group for player
+	const PxU32 CollisionGroupTrigger = 1 << 4;   // Collision group for trigger
+	const PxU32 CollisionGroupGround = 1 << 8;   // Collision group for ground
+	const PxU32 CollisionGroupSpring = 1 << 16;   // Collision group for spring
+
+	// Set collision groups and masks for other objects
+	extern PxFilterData filterDataOther;
+
+	// Set collision groups and masks for Player
+	extern PxFilterData filterDataPlayer;
+
+	// Set collision groups and masks for other TRIGGER
+	extern PxFilterData filterDataTrigger;
+
+	// Set collision groups and masks for the static back wall
+	extern PxFilterData filterDataBackWall;
+
+	// Set collision groups and masks for other ground
+	extern PxFilterData filterDataGround;
+
+	// Set collision groups and masks for other spring
+	extern PxFilterData filterDataSpring;
+
+#pragma endregion
+
+#pragma region GameProperties
+	const double PLAYER_INIT_OFFSET = 150;
+	const double INIT_LENGTH = 150;
+	const double FINAL_LENGTH = 10;
+	const double ROAD_WIDTH = 150;
+	const double COUNT = 3;
+#pragma endregion
 }

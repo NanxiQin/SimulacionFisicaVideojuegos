@@ -4,7 +4,7 @@ class GameScene;
 class Player :public DynamicRigidBody
 {
 public:
-	Player(GameScene* scene,Vector3 pos, PxMaterial* mat,Color color,double radius,double mass,PxFilterData* filter);
+	Player(GameScene* scene,Vector3 pos, PxMaterial* mat,Color color,double radius,double mass,PxFilterData filter=filterDataOther);
 	void handleMouse(int button, int state, int x, int y) override;
 	void handleMotion(int x, int y)override;
 	void update(double t)override;

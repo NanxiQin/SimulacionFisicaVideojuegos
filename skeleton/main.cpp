@@ -14,7 +14,7 @@
 #include <windows.h>
 
 std::string display_text = "Game";
-std::string displayTexts[2] = { "1-3 Fireworks | 4 UniformGen | 5 GuassianGen | 6 HoseEffect | 7 FogEffect | 8 RainEffect | 9 MilkyEffect" ,"e wind | r tornado | t explosion | y spring | u anchoredSpring | i rubberBand | o slinky | p buoyancy | z deleteLastGen | x checkGravity | c deleteLastForce" };
+std::string displayTexts[2] = { "1-3 Fireworks | 4 UniformGen | 5 GaussianGen | 6 HoseEffect | 7 FogEffect | 8 RainEffect | 9 MilkyEffect" ,"e wind | r tornado | t explosion | y spring | u anchoredSpring | i rubberBand | o slinky | p buoyancy | z deleteLastGen | x checkGravity | c deleteLastForce" };
 
 
 using namespace physx;
@@ -36,15 +36,7 @@ PxScene* gScene = NULL;
 ContactReportCallback gContactReportCallback;
 Scene* sceneMng;
 
-
-
-// Define collision groups and masks
-const PxU32 CollisionGroupWall = 1 << 0;      // Collision group for the wall
-const PxU32 CollisionGroupSphereA = 1 << 1;   // Collision group for sphere A
-const PxU32 CollisionGroupOther = 1 << 2;     // Collision group for other objects
-
-
-// Create collision filtering shader callback
+// Create collision filtering shader callbacks
 PxFilterFlags CustomFilterShader(
 	PxFilterObjectAttributes attributes0, PxFilterData filterData0,
 	PxFilterObjectAttributes attributes1, PxFilterData filterData1,
@@ -58,11 +50,19 @@ PxFilterFlags CustomFilterShader(
 	PX_UNUSED(constantBlock);
 
 	// Collision filtering logic
-	if ((filterData0.word0 == CollisionGroupWall && filterData1.word0 == CollisionGroupSphereA) ||
-		(filterData0.word0 == CollisionGroupSphereA && filterData1.word0 == CollisionGroupWall)||
+	if ((filterData0.word0 == CollisionGroupBackWall && filterData1.word0 == CollisionGroupPlayer) ||
+		(filterData0.word0 == CollisionGroupPlayer && filterData1.word0 == CollisionGroupBackWall)||
 		(filterData0.word0 == CollisionGroupOther && filterData1.word0 == CollisionGroupOther) ||
-		(filterData0.word0 == CollisionGroupOther && filterData1.word0 == CollisionGroupSphereA) ||
-		(filterData0.word0 == CollisionGroupSphereA && filterData1.word0 == CollisionGroupOther)) {
+		(filterData0.word0 == CollisionGroupGround && filterData1.word0 == CollisionGroupPlayer) ||
+		(filterData0.word0 == CollisionGroupPlayer && filterData1.word0 == CollisionGroupGround) ||
+		(filterData0.word0 == CollisionGroupGround && filterData1.word0 == CollisionGroupOther) ||
+		(filterData0.word0 == CollisionGroupOther && filterData1.word0 == CollisionGroupGround) ||
+		//(filterData0.word0 == CollisionGroupSpring && filterData1.word0 == CollisionGroupOther) ||
+		//(filterData0.word0 == CollisionGroupOther && filterData1.word0 == CollisionGroupSpring) ||
+		(filterData0.word0 == CollisionGroupSpring && filterData1.word0 == CollisionGroupPlayer) ||
+		(filterData0.word0 == CollisionGroupPlayer && filterData1.word0 == CollisionGroupSpring) ||
+		(filterData0.word0 == CollisionGroupOther && filterData1.word0 == CollisionGroupPlayer) ||
+		(filterData0.word0 == CollisionGroupPlayer && filterData1.word0 == CollisionGroupOther)) {
 		// Collide only if between wall and sphere A
 		pairFlags = PxPairFlag::eSOLVE_CONTACT |physx::PxPairFlag::eDETECT_DISCRETE_CONTACT
 			| physx::PxPairFlag::eNOTIFY_TOUCH_FOUND

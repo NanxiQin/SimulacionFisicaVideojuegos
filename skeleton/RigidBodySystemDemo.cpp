@@ -54,7 +54,7 @@ void RigidBodySystemDemo::rigidBodyDemo()
 	crosshair = { new Particle(particleProperties[STATIC], true, PxGeometryType::eBOX, true, nullptr, { 0.01,0.002,0.001 }), new Particle(particleProperties[STATIC], true, PxGeometryType::eBOX, true, nullptr, { 0.002,0.01,0.001 }) };
 
 	//suelo
-	addParticles({ new StaticRigidBody(particleProperties[STATIC], nullptr,nullptr, PxGeometryType::eBOX, { 200,1,200 }) });
+	addParticles({ new StaticRigidBody(particleProperties[STATIC], nullptr,filterDataOther, PxGeometryType::eBOX, { 200,1,200 }) });
 
 	auto gen = createGenerator<GaussianParticleGenerator>(true, new DynamicRigidBody({ PxTransform(0,100,0),{ 5,5,5 },DEFAULT_DAMPING,20,1,colorRGB[TransparentPink],15,0,NONE }, false, nullptr, PxGeometryType::eBOX, { 3,3,3 }), DefaultEffect, { 50,50,50 }, 20, 30);
 	gen->setGenProb(0.1);

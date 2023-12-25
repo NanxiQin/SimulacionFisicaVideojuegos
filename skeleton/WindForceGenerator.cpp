@@ -18,7 +18,7 @@ void WindForceGenerator::updateForce(Particle* particle, double t)
 	// Apply the wind force
 	Vector3 windF = (k1*v + k2 * abs(v.magnitude())*v);
 
-	if (abs(windF.x) < 1e+06 && abs(windF.y) < 1e+06 && abs(windF.z) < 1e+06)
+	if (abs(windF.magnitude()) < 1e+07)
 		particle->addForce(windF);
 
 }

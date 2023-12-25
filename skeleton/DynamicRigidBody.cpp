@@ -2,12 +2,10 @@
 extern PxPhysics* gPhysics;
 extern PxScene* gScene;
 
-DynamicRigidBody::DynamicRigidBody(ParticleProperties prop, bool registerRendering , PxMaterial* material, GeometryType geometryType, Vector3 volume, Vector3 tensor, PxFilterData* filter):
-	RigidBody(prop, false, material, geometryType,volume), body(nullptr),material(material)
+DynamicRigidBody::DynamicRigidBody(ParticleProperties prop, bool registerRendering, PxMaterial* material, GeometryType geometryType, Vector3 volume, Vector3 tensor, PxFilterData filter) :
+	RigidBody(prop, false, material, geometryType, volume), body(nullptr), material(material),tensor(tensor),filter(filter)
 {
-
-	if(filter!=nullptr) 
-	shape->setSimulationFilterData(*filter);
+	shape->setSimulationFilterData(filter);
 	body = gPhysics->createRigidDynamic(PxTransform(prop.transform.p));
 
 	body->setLinearVelocity(prop.vel);
@@ -15,15 +13,14 @@ DynamicRigidBody::DynamicRigidBody(ParticleProperties prop, bool registerRenderi
 	body->setAngularVelocity({ 0,0,0 });
 
 	body->attachShape(*shape);
-	
+
 	gScene->addActor(*body);
-	body->setWakeCounter(100000);
-	if(registerRendering) registerRender();
+	//body->setWakeCounter(100000);
+	if (registerRendering) registerRender();
 	if (tensor != Vector3(-1, -1, -1)) setTensor(tensor);
 	else PxRigidBodyExt::setMassAndUpdateInertia(*body, prop.mass);
 
 }
-
 void DynamicRigidBody::die()
 {
 	Particle::die();
@@ -33,7 +30,7 @@ void DynamicRigidBody::die()
 
 DynamicRigidBody* DynamicRigidBody::clone(bool render) const
 {
-	return new DynamicRigidBody(prop, render, material, geometryType,volume);
+	return new DynamicRigidBody(prop, render, material, geometryType, volume,tensor,filter);
 }
 
 void DynamicRigidBody::createNewRenderItem()
