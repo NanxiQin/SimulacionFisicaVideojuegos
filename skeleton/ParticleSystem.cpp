@@ -4,7 +4,7 @@
 ParticleSystem::ParticleSystem(Scene* scene, const Vector3& g) :
 	System(scene), shooter(new ShooterManager(this)), gravity(g), forceRegistry(new ParticleForceRegistry()), 
 	gravityForce(new GravityForceGenerator(g)), floatingForce(new GravityForceGenerator(FLOAT_FORCE)), hasGravity(true),
-	particleBoundDistance({PARTICLE_BOUND_DISTANCE ,PARTICLE_BOUND_DISTANCE, PARTICLE_BOUND_DISTANCE })
+	particleMaxBoundDistance({PARTICLE_BOUND_DISTANCE ,PARTICLE_BOUND_DISTANCE, PARTICLE_BOUND_DISTANCE }), particleMinBoundDistance({ -PARTICLE_BOUND_DISTANCE ,-PARTICLE_BOUND_DISTANCE, -PARTICLE_BOUND_DISTANCE })
 {
 	forceGenerators.push_back(gravityForce);
 	forceGenerators.push_back(floatingForce);
@@ -44,7 +44,7 @@ void ParticleSystem::refresh()
 			onParticleDeath(p);
 			forceRegistry->deleteParticleRegistry(p);
 			it = particles.erase(it);
-			p->die();
+			delete p;
 		}
 		else ++it;
 
@@ -143,11 +143,11 @@ void ParticleSystem::initFirework(double prob, int nParticle)
 	firework_generators.push_back(g);
 }
 
-void ParticleSystem::generateFirework(bool randomColor, int maxGen, int gen)
+void ParticleSystem::generateFirework(bool randomColor, int maxGen, int gen,Vector3 pos, Vector3 dir)
 {
 	Firework* f = new Firework(particleProperties[FIREWORK], firework_generators[gen], 0, maxGen, true, randomColor);
-	f->setVel(f->getVel() * GetCamera()->getDir()) ;
-	f->setPos(GetCamera()->getEye());
+	f->setVel(f->getVel() * dir) ;
+	f->setPos(pos);
 	addParticles({ f });
 }
 

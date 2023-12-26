@@ -24,8 +24,10 @@ DynamicRigidBody::DynamicRigidBody(ParticleProperties prop, bool registerRenderi
 void DynamicRigidBody::die()
 {
 	Particle::die();
-	if (body != nullptr)
+	if (body != nullptr) {
 		body->release();
+		body = nullptr;
+	}
 }
 
 DynamicRigidBody* DynamicRigidBody::clone(bool render) const

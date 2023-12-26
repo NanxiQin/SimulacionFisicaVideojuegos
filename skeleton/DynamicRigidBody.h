@@ -4,7 +4,7 @@ class DynamicRigidBody :public RigidBody
 {
 public:
 	DynamicRigidBody(ParticleProperties prop, bool registerRendering=true, PxMaterial* material=nullptr, GeometryType geometryType = PxGeometryType::eSPHERE,Vector3 volume=Vector3(0), Vector3 tensor = Vector3(-1), PxFilterData filter = filterDataOther);
-	
+	~DynamicRigidBody() { die(); };
 	void die() override;
 	virtual DynamicRigidBody* clone(bool render = true)const;
 	void createNewRenderItem();;

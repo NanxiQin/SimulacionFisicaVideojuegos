@@ -10,7 +10,7 @@ public:
 	Particle(ParticleProperties properties, bool registerRender = true, GeometryType geometryType = PxGeometryType::eSPHERE, bool isStatic = false, PxMaterial* material = nullptr, Vector3 volume = { 1,1,1 });
 	virtual ~Particle();
 
-	void die() override;
+	virtual void die() override;
 	void update(double t)override;
 	virtual void keyPress(unsigned char key) {};
 	virtual void keyRelease(unsigned char key) {}

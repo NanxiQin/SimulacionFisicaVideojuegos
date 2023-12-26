@@ -8,7 +8,7 @@
 class GameScene : public Scene
 {
 
-	enum State{ preparing,pausing,playing,end};
+	enum State{ preparing,pausing,playing,restart,win,lose};
 public:
 	GameScene();
 
@@ -17,21 +17,29 @@ public:
 	virtual void keyPress(unsigned char key);
 	void handleMotion(int x, int y)override;
 	void onCollision(physx::PxActor* actor1, physx::PxActor* actor2)override;
+	
+	void onPlayerLose();
+	void onPlayerWin();
+	void onRestart();
+	void onPlaying();
+	void shootFireworks();
 
-	void onPlayerDie();
-	bool dynamicRigidBodyExists(PxActor* actor, DynamicRigidBody* & rb);
+	bool rigidBodyExists(PxActor* actor, RigidBody* & rb);
 private:
 
 	double roadWidth;
 	double roadLength;
-	unordered_map<PxActor*, DynamicRigidBody*> actorMap;
+	Vector3 metaPos;
+	unordered_map<PxActor*, RigidBody*> actorMap;
 
 	ParticleSystem* particleSys;
 	RigidBodySystem* rigidBodySys;
+	RigidBodySystem* roadSys;
 	Player* player;
 	Particle* backWall;
 	Particle* rightWall;
 	Particle* leftWall;
+	WindForceGenerator* windForce;
 	SimpleParticleGenerator* constrail;
 	double counter;
 	State state;

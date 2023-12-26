@@ -12,6 +12,7 @@ StaticRigidBody::StaticRigidBody(ParticleProperties prop, PxMaterial* material, 
 	gScene->addActor(*body);
 }
 
+
 void StaticRigidBody::die()
 {
 	Particle::die();

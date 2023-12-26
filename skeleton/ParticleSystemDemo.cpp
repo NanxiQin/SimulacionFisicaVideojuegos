@@ -13,13 +13,13 @@ void ParticleSystemDemo::keyPress(unsigned char key)
 	switch (key)
 	{
 	case shoot_Firework1:
-		generateFirework(false, 3, 0);
+		generateFirework(false, 3, 0,GetCamera()->getEye(), GetCamera()->getDir());
 		break;
 	case shoot_Firework2:
-		generateFirework(false, 5, 1);
+		generateFirework(false, 5, 1, GetCamera()->getEye(), GetCamera()->getDir());
 		break;
 	case shoot_Firework3:
-		generateFirework(true, 5, 2);
+		generateFirework(true, 5, 2, GetCamera()->getEye(), GetCamera()->getDir());
 		break;
 	case add_UniformGen:
 		createGenerator<SimpleParticleGenerator>(true, DefaultEffect, { -50,0,0 }, Pink)->addForceGenerators({ gravityForce });

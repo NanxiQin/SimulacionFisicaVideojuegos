@@ -2,77 +2,61 @@
 extern PxPhysics* gPhysics;
 extern PxScene* gScene;
 
+GameScene::GameScene() :Scene()
+{
+	initGame();
+}
 
 void GameScene::initGame()
 {
 	state = preparing;
 	counter = 0;
 
+	addSystem(particleSys = new ParticleSystem(this, Vector3{ 0,GRAVITY,0 }));
+	addSystem(rigidBodySys = new RigidBodySystem(this, Vector3{ 0,GRAVITY,0 }));
+	addSystem(roadSys = new RigidBodySystem(this, Vector3{ 0,GRAVITY,0 }));
+
 	loadMap("./map.txt");
 
-
-	rigidBodySys->setparticleBoundDistance(Vector3(1.5 * ROAD_WIDTH, 100, roadLength + 100));
-	particleSys->setparticleBoundDistance(Vector3(1.5 * ROAD_WIDTH, 100, roadLength + 100));
+	//Entities' DeadZone
+	rigidBodySys->setparticleBoundDistance(Vector3(-1.5 * ROAD_WIDTH, -100, GetCamera()->getEye().z - 100), Vector3(1.5 * ROAD_WIDTH, 100, roadLength + 400));
+	particleSys->setparticleBoundDistance(Vector3(-1.5 * ROAD_WIDTH, -100, GetCamera()->getEye().z - 100), Vector3(1.5 * ROAD_WIDTH, 100, roadLength + 400));
+	roadSys->setparticleBoundDistance(Vector3(-1.5 * ROAD_WIDTH, -100, -roadLength-400), Vector3(1.5 * ROAD_WIDTH, 100, roadLength + 400));
 
 	//Player................................................................................
 	//Create Player
-	rigidBodySys->addParticles({ player = new Player(this,{ 0,0,-PLAYER_INIT_OFFSET }, gPhysics->createMaterial(0.5f, 0.5f, 0.0f), Pink, 11, 10000, filterDataPlayer) });
+	rigidBodySys->addParticles({ player = new Player(this,{ 0,0,-PLAYER_INIT_OFFSET },metaPos, gPhysics->createMaterial(0.5f, 0.5f, 0.0f), COLOR1, 11, 10000, filterDataPlayer) });
 	//Contrails
 	constrail = particleSys->createGenerator<SimpleParticleGenerator>(true, DefaultEffect, { 0,0,0 }, White, { {-20,20},{-0.1,0.1},{-5,0} }, 1, 2);
-	//Add wind force to player
-	rigidBodySys->addForcetoParticle(rigidBodySys->createForceGenerators<WindForceGenerator>(0.3, Vector3(0, 0, 50), -1, Vector3(2 * ROAD_WIDTH, 100, roadLength)), player);
+	//Add windForce to Player
+	rigidBodySys->addForcetoParticle(windForce = rigidBodySys->createForceGenerators<WindForceGenerator>(0.3, Vector3(0, 0, 64.5), -1, Vector3(2 * ROAD_WIDTH, 100, roadLength)), player);
 
 	//Adjust Camera's vision
 	GetCamera()->setEye(player->getPos() + Vector3(0, 300, -100));
 	GetCamera()->setDir(player->getPos() - GetCamera()->getEye());
-	GetCamera()->setEye(GetCamera()->getEye() + Vector3(0, 0, 50));
+	GetCamera()->setEye(GetCamera()->getEye() + Vector3(0, 0, 100));
 
-	//Create Road
+	//Create Road...........................................................................
 	//Ground
 	StaticRigidBody* ground;
 
-	rigidBodySys->addParticles({ ground = new StaticRigidBody(particleProperties[STATIC], gPhysics->createMaterial(0, 0, 0) ,filterDataGround, PxGeometryType::eBOX, { ROAD_WIDTH,1,(float)roadLength}) });
-	ground->setPos({ 0,0,(float)(roadLength / 2.0 - INIT_LENGTH) });
+	roadSys->addParticles({ ground = new StaticRigidBody(particleProperties[STATIC], gPhysics->createMaterial(0, 0, 0) ,filterDataGround, PxGeometryType::eBOX, { ROAD_WIDTH,1,(float)roadLength}) });
+	ground->setPos({ 0,0,(float)(((roadLength / 2.0 - INIT_LENGTH))*2)});
 
 	//Walls
-	rigidBodySys->addParticles({ rightWall = new StaticRigidBody(particleProperties[STATIC], nullptr,filterDataOther, PxGeometryType::eBOX, { 10,20,(float)roadLength}) });
-	rightWall->setPos({ ROAD_WIDTH,0,(float)(roadLength / 2.0 - INIT_LENGTH) });
+	roadSys->addParticles({ leftWall = new StaticRigidBody(particleProperties[STATIC], nullptr,filterDataOther, PxGeometryType::eBOX, { 10,20,(float)roadLength}) });
+	leftWall->setPos({ ROAD_WIDTH,0,(float)(roadLength / 2.0 - INIT_LENGTH) });
+	leftWall->setColor(colorRGB[Black]);
+	
+	roadSys->addParticles({ rightWall = new StaticRigidBody(particleProperties[STATIC], nullptr,filterDataOther, PxGeometryType::eBOX, { 10,20,(float)roadLength}) });
+	rightWall->setPos({ -ROAD_WIDTH,0,(float)(roadLength / 2.0 - INIT_LENGTH) });
+	rightWall->setColor(colorRGB[Black]);
 
-	rigidBodySys->addParticles({ leftWall = new StaticRigidBody(particleProperties[STATIC], nullptr,filterDataOther, PxGeometryType::eBOX, { 10,20,(float)roadLength}) });
-	leftWall->setPos({ -ROAD_WIDTH,0,(float)(roadLength / 2.0 - INIT_LENGTH) });
-
-	rigidBodySys->addParticles({ backWall = new StaticRigidBody(particleProperties[STATIC], gPhysics->createMaterial(0.5f, 0.5f, 0.0f),filterDataBackWall, PxGeometryType::eBOX, { 155,20,10 }) });
+	roadSys->addParticles({ backWall = new StaticRigidBody(particleProperties[STATIC], gPhysics->createMaterial(0.5f, 0.5f, 0.0f),filterDataBackWall, PxGeometryType::eBOX, { 140,20,10 }) });
 	backWall->setPos({ 0,0,GetCamera()->getEye().z - 60 });
 
-
-
-
-	//double offset = 2;
-	//double wallOffset = 20;
-	//double radius = 4;
-	////for (int i = 0; i < 15; i++) { //row
-	////	for (int j = 0; j < 15; j++) { //column
-	////		rigidBodySys->addParticles({ new DynamicRigidBody({ PxTransform(-(j * (2 * radius + offset) - posWidth),0,-i * (2 * radius + offset)),{ 0,0,0 },0.8,2,radius,colorRGB[Yellow],-1,0,NONE }) });
-	////	}
-	////}
-	//radius = 10;
-	//double posWidth = (2 * radius + offset) * 10 - wallOffset;
-	//DynamicRigidBody* aux;
-	//for (int i = 0; i < 10; i++) {
-	//	for (int j = 0; j < 4; j++) {
-	//		rigidBodySys->addParticles({ aux = new DynamicRigidBody({ PxTransform(-(j * (2 * radius + offset) - posWidth),0,-i * (2 * radius + offset)),{ 0,0,0 },0.8,2,radius,colorRGB[Purple],-1,0,NONE },true,nullptr,GeometryType::eSPHERE) });
-	//		actorMap.insert({ aux->getActor(),aux });
-	//	}
-	//}
-
-
-	//for (int i = 0; i < 8; i++) {
-	//	for (int j = 0; j < 4; j++) {
-	//		rigidBodySys->addParticles({ new DynamicRigidBody({ PxTransform(j * 50 ,10,i * 50),{0,0,0},0.8,2,9,colorRGB[Blue],-1,0,NONE},true,nullptr,GeometryType::eBOX,{10,10,10}) });
-	//	}
-	//}
-
 }
+
 void GameScene::loadMap(const string& file)
 {
 	ifstream input;
@@ -83,27 +67,24 @@ void GameScene::loadMap(const string& file)
 	//read rows and columns of the map
 	input >> rows >> columns;
 
-	//Errores al leer tamaño del mapa
 	if (rows <= 0) throw "the map's row is out of the range";
 	if (columns <= 0) throw "the map's column is out of the range";
 
-
 	double offset = 2;
-	double radius = 4;
-	//double playerDistance=100;
-	double wallOffset = 2;
+	double wallOffset = 3;
 	double cellWidth = 11;
-	double posWidth, posLength;
 	int color;
+	double radius;
 
 	roadWidth = ROAD_WIDTH;
 	roadLength = cellWidth * rows + INIT_LENGTH + FINAL_LENGTH;
 
-	DynamicRigidBody* aux;
-	//posWidth = (2 * radius + offset) * columns - wallOffset;
+	//CreateMapInitPos
+	double posWidth, posLength;
 	posWidth = cellWidth * columns / 2 - wallOffset;
 	posLength = cellWidth * rows;
-	//posLength = (2 * radius + offset) * rows;
+
+	DynamicRigidBody* aux;
 	for (int row = 0; row < rows; row++) {
 		string actualRow;
 		input >> actualRow;
@@ -111,51 +92,57 @@ void GameScene::loadMap(const string& file)
 		int direction;
 		for (int column = 0; column < columns; ++column, ++stringIndex) {
 			switch (actualRow[stringIndex]) {
-			case '-':break;
-			case 'o':
+			case '-':break; //empty
+			case 'o': //BigSphere
 				radius = 10;
 				stringIndex++;
 				color = atoi(&actualRow[stringIndex]);
+				color == 0 ? color = COLOR1 : color = COLOR2;
 				rigidBodySys->addParticles({ aux = new DynamicRigidBody({ PxTransform(-(column * (cellWidth)-posWidth + cellWidth / 2.0),0,-(row * (cellWidth)-posLength + cellWidth / 2.0)),{ 0,0,0 },0.8,2,radius,colorRGB[color],-1,0,NONE }) });
 				actorMap.insert({ aux->getActor(),aux });
 				break;
-			case '.':
+			case '.'://SmallSphere
 				radius = 4;
 				stringIndex++;
 				color = atoi(&actualRow[stringIndex]);
+				color == 0 ? color = COLOR1 : color = COLOR2;
 				rigidBodySys->addParticles({ aux = new DynamicRigidBody({ PxTransform(-(column * (cellWidth)-posWidth + cellWidth / 2.0),0,-(row * (cellWidth)-posLength + cellWidth / 2.0)),{ 0,0,0 },0.8,2,radius,colorRGB[color],-1,0,NONE }) });
 
 				actorMap.insert({ aux->getActor(),aux });
 				break;
 
-			case 'b':
+			case 'b'://SmallCube
 				stringIndex++;
 				color = atoi(&actualRow[stringIndex]);
+				color == 0 ? color = COLOR1 : color = COLOR2;
 				rigidBodySys->addParticles({ aux = new DynamicRigidBody({ PxTransform(-(column * (cellWidth)-posWidth + cellWidth / 2.0),3,-(row * (cellWidth)-posLength + cellWidth / 2.0)),{ 0,0,0 },0.8,2,radius,colorRGB[color],-1,0,NONE },true,nullptr,GeometryType::eBOX,{3,3,3}) });
 
 				actorMap.insert({ aux->getActor(),aux });
 				break;
 
-			case 'v':
+			case 'v'://BigCube
 				stringIndex++;
 				color = atoi(&actualRow[stringIndex]);
+				color == 0 ? color = COLOR1 : color = COLOR2;
 				rigidBodySys->addParticles({ aux = new DynamicRigidBody({ PxTransform(-(column * (cellWidth)-posWidth + cellWidth / 2.0),7,-(row * (cellWidth)-posLength + cellWidth / 2.0)),{ 0,0,0 },0.8,2,radius,colorRGB[color],-1,0,NONE },true,nullptr,GeometryType::eBOX,{7,7,7}) });
 
 				actorMap.insert({ aux->getActor(),aux });
 				break;
 
-			case 't':
+			case 't'://Cuboid
 				stringIndex++;
 				color = atoi(&actualRow[stringIndex]);
+				color == 0 ? color = COLOR1 : color = COLOR2;
 				rigidBodySys->addParticles({ aux = new DynamicRigidBody({ PxTransform(-(column * (cellWidth)-posWidth + cellWidth / 2.0),7,-(row * (cellWidth)-posLength + cellWidth / 2.0)),{ 0,0,0 },0.8,2,radius,colorRGB[color],-1,0,NONE },true,nullptr,GeometryType::eBOX,{30,7,7}) });
 
 				actorMap.insert({ aux->getActor(),aux });
 				break;
-			case 'c':
+			case 'c'://Spring
 				radius = 6;
 				stringIndex++;
 				char c = actualRow[stringIndex];
 				color = atoi(&c);
+				color == 0 ? color = COLOR1 : color = COLOR2;
 				stringIndex++;
 				direction = atoi(&actualRow[stringIndex]);
 				direction == 1 ? direction = 1 : direction = -1;
@@ -170,24 +157,19 @@ void GameScene::loadMap(const string& file)
 		}
 	}
 	input.close();
-}
-GameScene::GameScene() :Scene()
-{
-	addSystem(particleSys = new ParticleSystem(this, Vector3{ 0,GRAVITY,0 }));
-	addSystem(rigidBodySys = new RigidBodySystem(this, Vector3{ 0,GRAVITY,0 }));
-	initGame();
-}
 
-void GameScene::handleMouse(int button, int state, int x, int y)
-{
-	Scene::handleMouse(button, state, x, y);
+	//Goal
+	vector<int>bw({ Black,White });
+	cellWidth = 10;
+	for (int i = 0; i < 4; ++i) {
+		for (int j = 0; j < 30; ++j) {
+			int color = bw[(i % 2 + j % 2) % 2]; //aternatively changing black and white color
+			particleSys->addParticles({ new Particle({ PxTransform(-(j * (cellWidth)-(ROAD_WIDTH)+cellWidth / 2.0),4,-(i * (cellWidth)-posLength - 100 + cellWidth / 2.0)),{ 0,0,0 },0.8,2,1,colorRGB[color],-1,0,NONE },true,GeometryType::eBOX,true,nullptr,{5,0.5,5}) });
 
-	//GetCamera()->handleMouse(button, state, x, y);
-}
-
-void GameScene::keyPress(unsigned char key)
-{
-	Scene::keyPress(key);
+		}
+	}
+	metaPos = { 0, 7,(float)posLength+100 };
+	roadSys->addParticles({ new StaticRigidBody({ PxTransform(0,7,posLength + 200),{ 0,0,0 },0.8,2,radius,colorRGB[Black],-1,0,NONE },gPhysics->createMaterial(0.5f, 0.5f, 0.0f),filterDataTrigger, PxGeometryType::eBOX, { (float)roadWidth,100,50})});
 }
 
 void GameScene::update(double t)
@@ -197,40 +179,109 @@ void GameScene::update(double t)
 	case preparing:
 		counter += t;
 		if (counter > COUNT)
-			state = playing;
+			state = pausing;
 		break;
 	case pausing:
 		break;
 	case playing:
-		constrail->setOrigin(player->getPos() + Vector3(-5, 0, -10));
-		constrail->setMeanVelocity(-player->getVel().getNormalized());
 		GetCamera()->setEye((GetCamera()->getEye() + Vector3(0, 0, 50) * t));
-		backWall->setPos({ 0,0,GetCamera()->getEye().z - 60 });
+		onPlaying();
 		Scene::update(t);
 		break;
-	case end:
-		Scene::update(t);
-		break;
+	case win:shootFireworks(); Scene::update(t); break;
+	case lose:Scene::update(t);break;
 	default:
 		break;
 	}
 
 }
 
+void GameScene::onCollision(physx::PxActor* actor1, physx::PxActor* actor2)
+{
+	switch (state)
+	{
+	case playing:player->onCollision(actor1, actor2);break;
+	}
+}
+
+void GameScene::handleMouse(int button, int state, int x, int y)
+{
+	
+	switch (state)
+	{
+
+	case preparing:case pausing:case playing:Scene::handleMouse(button, state, x, y);break;
+	}
+
+	//GetCamera()->handleMouse(button, state, x, y);
+}
+
 void GameScene::handleMotion(int x, int y)
 {
-	Scene::handleMotion(x, y);
-
+	
+	switch (state)
+	{
+	case preparing:case pausing:case playing:Scene::handleMotion(x, y);break;
+	}
 	//GetCamera()->handleMotion(x, y);
 }
 
-void GameScene::onPlayerDie()
+void GameScene::keyPress(unsigned char key)
 {
-	state = end;
-	particleSys->deleteParticleGenerator(constrail);
+	switch (state)
+	{
+	case preparing:break;
+	case pausing:if (key == ' ')state = playing;player->setActive(); break;
+	case playing:Scene::keyPress(key);break;
+	case win:case lose: if (key == 'r')onRestart(); break;
+	}
 }
 
-bool GameScene::dynamicRigidBodyExists(PxActor* actor, DynamicRigidBody*& rb)
+void GameScene::onPlayerLose()
+{
+	state = lose;
+	particleSys->deleteParticleGenerator(constrail);
+	rigidBodySys->addForcetoAllParticles({ rigidBodySys->createForceGenerators<ExplosionForceGenerator>(player->getPos(), 200, 40000, 0.5)});
+}
+
+void GameScene::onPlayerWin()
+{
+	state = win;
+	rigidBodySys->deregisterForceGenerator(windForce);
+	particleSys->deleteParticleGenerator(constrail);
+	particleSys->createFireworkGenerators();
+}
+
+void GameScene::onRestart()
+{
+	systems.clear();
+	delete particleSys;
+	delete rigidBodySys;
+	delete roadSys;
+	actorMap.clear();
+	initGame();
+}
+
+void GameScene::onPlaying()
+{
+	//move constrail
+	constrail->setOrigin(player->getPos() + Vector3(-5, 0, -10));
+	constrail->setMeanVelocity(-player->getVel().getNormalized());
+	//move backwall
+	backWall->setPos({ 0,0,GetCamera()->getEye().z - 60 });
+	//update DeadZone
+	rigidBodySys->setparticleBoundDistance(Vector3(-1.5 * ROAD_WIDTH, -100, GetCamera()->getEye().z - 100), Vector3(1.5 * ROAD_WIDTH, 100, roadLength + 400));
+	particleSys->setparticleBoundDistance(Vector3(-1.5 * ROAD_WIDTH, -500, GetCamera()->getEye().z - 100), Vector3(1.5 * ROAD_WIDTH, 400, roadLength + 600));
+}
+
+void GameScene::shootFireworks()
+{
+	particleSys->generateFirework(true, 3, 2, Vector3(-100, -0, GetCamera()->getEye().z + 100), Vector3(1, 1, 0));
+	particleSys->generateFirework(true, 3, 2, Vector3(0, -0, GetCamera()->getEye().z + 100), Vector3(0, 1, 0));
+	particleSys->generateFirework(true, 3, 2, Vector3(100, -0, GetCamera()->getEye().z + 100), Vector3(-1, 1, 0));
+}
+
+bool GameScene::rigidBodyExists(PxActor* actor, RigidBody*& rb)
 {
 	rb = nullptr;
 	auto it = actorMap.find(actor);
@@ -241,8 +292,4 @@ bool GameScene::dynamicRigidBodyExists(PxActor* actor, DynamicRigidBody*& rb)
 	else return false;
 }
 
-void GameScene::onCollision(physx::PxActor* actor1, physx::PxActor* actor2)
-{
-	player->onCollision(actor1, actor2);
-}
 

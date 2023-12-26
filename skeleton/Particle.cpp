@@ -14,8 +14,10 @@ Particle::~Particle() {
 }
 
 void Particle::die() {
-	if (renderItem != nullptr)
+	if (renderItem != nullptr) {
 		renderItem->release();
+		renderItem = nullptr;
+	}
 	if (shape != nullptr)
 		shape = nullptr;
 }

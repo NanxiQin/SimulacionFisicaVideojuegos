@@ -33,8 +33,12 @@ public:
 	virtual void addGravity(Particle* particle);
 	virtual void addFloating(Particle* particle);
 
+	void createFireworkGenerators();
+	void generateFirework(bool randomColor, int maxGen, int gen,Vector3 pos,Vector3 dir);
+
 	void addForcetoParticle(ForceGenerator* fg, Particle* p);
-	void setparticleBoundDistance(Vector3 d) { particleBoundDistance = d; };
+	void setparticleBoundDistance(Vector3 d) { particleMaxBoundDistance= particleMinBoundDistance = d; };
+	void setparticleBoundDistance(Vector3 min, Vector3 max) { particleMaxBoundDistance = max; particleMinBoundDistance = min;};
 
 	void addForcetoAllParticles(list <ForceGenerator*> fg);
 
@@ -71,6 +75,8 @@ public:
 		return fg;
 	}
 
+	
+
 protected:
 	bool hasGravity;
 	Vector3 gravity;
@@ -90,16 +96,16 @@ protected:
 
 	// This generator is only to shoot the firework
 	vector< ParticleGenerator*>firework_generators;
-	Vector3 particleBoundDistance;
+	Vector3 particleMaxBoundDistance;
+	Vector3 particleMinBoundDistance;
 
 	void cleanSystem();
 	virtual void resetSystem();
 	// Method to generate a Firework with the appropiate type
-	void generateFirework(bool randomColor, int maxGen, int gen);
 
 	template <typename T>
 	void initFirework(double prob, int nParticle);
-	void createFireworkGenerators();
+
 
 
 	//! This is used currently in the Fireworks to spread more Fireworks!
@@ -107,7 +113,10 @@ protected:
 
 
 	inline bool isOutOfBounds(const Vector3& pos) const {
-		return fabs(pos.x) > particleBoundDistance.x || fabs(pos.y) > particleBoundDistance.y || fabs(pos.z) > particleBoundDistance.z;
+		return
+			pos.x > particleMaxBoundDistance.x || pos.x < particleMinBoundDistance.x||
+			pos.y > particleMaxBoundDistance.y || pos.y < particleMinBoundDistance.y||
+			pos.z > particleMaxBoundDistance.z || pos.z < particleMinBoundDistance.z;
 	}
 
 

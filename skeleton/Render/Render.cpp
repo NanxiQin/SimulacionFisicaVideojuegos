@@ -278,7 +278,7 @@ namespace Snippets
 
 		// Setup lighting
 		glEnable(GL_LIGHTING);
-		PxReal ambientColor[] = { 0.8f, 0.8f, 0.8f, 0.8f };
+		PxReal ambientColor[] = { 0.5f, 0.5f, 0.5f, 1.0f };
 		PxReal diffuseColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 		PxReal specularColor[] = { 0.0f, 0.0f, 0.0f, 0.0f };
 		PxReal position[] = { 100.0f, 100.0f, 400.0f, 1.0f };
