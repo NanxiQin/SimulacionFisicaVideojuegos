@@ -63,6 +63,7 @@ namespace
 		if (key == 27)
 			exit(0);
 
+		key=tolower(key);
 		keyPress(key, sCamera->getTransform());
 	}
 

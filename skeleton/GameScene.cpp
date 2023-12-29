@@ -10,6 +10,7 @@ GameScene::GameScene() :Scene()
 void GameScene::initGame()
 {
 	state = preparing;
+	display_text = "Loading...";
 	counter = 0;
 
 	addSystem(particleSys = new ParticleSystem(this, Vector3{ 0,GRAVITY,0 }));
@@ -40,8 +41,13 @@ void GameScene::initGame()
 	//Ground
 	StaticRigidBody* ground;
 
-	roadSys->addParticles({ ground = new StaticRigidBody(particleProperties[STATIC], gPhysics->createMaterial(0, 0, 0) ,filterDataGround, PxGeometryType::eBOX, { ROAD_WIDTH,1,(float)roadLength}) });
-	ground->setPos({ 0,0,(float)(((roadLength / 2.0 - INIT_LENGTH))*2)});
+	double eachLength = (roadLength+2*FINAL_LENGTH) / 10.0;
+	for (int i = 0; i < 10; ++i) {
+	roadSys->addParticles({ ground = new StaticRigidBody(particleProperties[STATIC], gPhysics->createMaterial(0, 0, 0) ,filterDataGround, PxGeometryType::eBOX, { ROAD_WIDTH,1,(float)((eachLength)/2.0)}) });
+	ground->setPos({ 0,-0.2,(float)(eachLength*i- INIT_LENGTH) });
+	}
+	//roadSys->addParticles({ ground = new StaticRigidBody(particleProperties[STATIC], gPhysics->createMaterial(0, 0, 0) ,filterDataGround, PxGeometryType::eBOX, { ROAD_WIDTH,1,(float)roadLength}) });
+	//ground->setPos({ 0,0,(float)(((roadLength / 2.0 - INIT_LENGTH))*2)});
 
 	//Walls
 	roadSys->addParticles({ leftWall = new StaticRigidBody(particleProperties[STATIC], nullptr,filterDataOther, PxGeometryType::eBOX, { 10,20,(float)roadLength}) });
@@ -133,7 +139,7 @@ void GameScene::loadMap(const string& file)
 				stringIndex++;
 				color = atoi(&actualRow[stringIndex]);
 				color == 0 ? color = COLOR1 : color = COLOR2;
-				rigidBodySys->addParticles({ aux = new DynamicRigidBody({ PxTransform(-(column * (cellWidth)-posWidth + cellWidth / 2.0),7,-(row * (cellWidth)-posLength + cellWidth / 2.0)),{ 0,0,0 },0.8,2,radius,colorRGB[color],-1,0,NONE },true,nullptr,GeometryType::eBOX,{30,7,7}) });
+				rigidBodySys->addParticles({ aux = new DynamicRigidBody({ PxTransform(-(column * (cellWidth)-posWidth + cellWidth / 2.0),7,-(row * (cellWidth)-posLength + cellWidth / 2.0)),{ 0,0,0 },0.8,5,radius,colorRGB[color],-1,0,NONE },true,nullptr,GeometryType::eBOX,{30,7,7}) });
 
 				actorMap.insert({ aux->getActor(),aux });
 				break;
@@ -169,7 +175,7 @@ void GameScene::loadMap(const string& file)
 		}
 	}
 	metaPos = { 0, 7,(float)posLength+100 };
-	roadSys->addParticles({ new StaticRigidBody({ PxTransform(0,7,posLength + 200),{ 0,0,0 },0.8,2,radius,colorRGB[Black],-1,0,NONE },gPhysics->createMaterial(0.5f, 0.5f, 0.0f),filterDataTrigger, PxGeometryType::eBOX, { (float)roadWidth,100,50})});
+	roadSys->addParticles({ new StaticRigidBody({ PxTransform(0,7,posLength + 250),{ 0,0,0 },0.8,2,radius,colorRGB[Black],-1,0,NONE },gPhysics->createMaterial(0.5f, 0.5f, 0.0f),filterDataTrigger, PxGeometryType::eBOX, { (float)roadWidth,100,100})});
 }
 
 void GameScene::update(double t)
@@ -178,8 +184,10 @@ void GameScene::update(double t)
 	{
 	case preparing:
 		counter += t;
-		if (counter > COUNT)
+		if (counter > COUNT) {
 			state = pausing;
+			display_text = "Press SPACE to start";
+		}
 		break;
 	case pausing:
 		break;
@@ -231,7 +239,11 @@ void GameScene::keyPress(unsigned char key)
 	switch (state)
 	{
 	case preparing:break;
-	case pausing:if (key == ' ')state = playing;player->setActive(); break;
+	case pausing:if (key == ' ')  
+		state = playing;
+		player->setActive();
+		display_text = " ";
+		break;
 	case playing:Scene::keyPress(key);break;
 	case win:case lose: if (key == 'r')onRestart(); break;
 	}
@@ -240,6 +252,7 @@ void GameScene::keyPress(unsigned char key)
 void GameScene::onPlayerLose()
 {
 	state = lose;
+	display_text = "You Lose! Press 'R' to restart";
 	particleSys->deleteParticleGenerator(constrail);
 	rigidBodySys->addForcetoAllParticles({ rigidBodySys->createForceGenerators<ExplosionForceGenerator>(player->getPos(), 200, 40000, 0.5)});
 }
@@ -247,6 +260,7 @@ void GameScene::onPlayerLose()
 void GameScene::onPlayerWin()
 {
 	state = win;
+	display_text = "You Win! Press 'R' to restart";
 	rigidBodySys->deregisterForceGenerator(windForce);
 	particleSys->deleteParticleGenerator(constrail);
 	particleSys->createFireworkGenerators();
@@ -276,9 +290,9 @@ void GameScene::onPlaying()
 
 void GameScene::shootFireworks()
 {
-	particleSys->generateFirework(true, 3, 2, Vector3(-100, -0, GetCamera()->getEye().z + 100), Vector3(1, 1, 0));
-	particleSys->generateFirework(true, 3, 2, Vector3(0, -0, GetCamera()->getEye().z + 100), Vector3(0, 1, 0));
-	particleSys->generateFirework(true, 3, 2, Vector3(100, -0, GetCamera()->getEye().z + 100), Vector3(-1, 1, 0));
+	particleSys->generateFirework(true, 3, 2, Vector3(-100, -0, metaPos.z+10), Vector3(1, 1, 0));
+	particleSys->generateFirework(true, 3, 2, Vector3(0, -0, metaPos.z + 10), Vector3(0, 1, 0));
+	particleSys->generateFirework(true, 3, 2, Vector3(100, -0, metaPos.z + 10), Vector3(-1, 1, 0));
 }
 
 bool GameScene::rigidBodyExists(PxActor* actor, RigidBody*& rb)

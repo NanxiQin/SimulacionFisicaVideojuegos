@@ -188,11 +188,13 @@ namespace game_def {
 #pragma region GameProperties
 	const double PLAYER_INIT_OFFSET = 150;
 	const double INIT_LENGTH = 150;
-	const double FINAL_LENGTH = 10;
+	const double FINAL_LENGTH = 100;
 	const double ROAD_WIDTH = 150;
-	const double COUNT = 2;
+	const double COUNT = 3;
 
 	const Color COLOR1 = Yellow;
 	const Color COLOR2 = Blue;
+
+	extern string display_text;
 #pragma endregion
 }

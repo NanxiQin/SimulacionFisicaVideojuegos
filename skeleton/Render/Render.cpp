@@ -29,8 +29,9 @@
 
 #include "Render.h"
 #include <assert.h>
-
+#include "../game_def.h"
 using namespace physx;
+using namespace game_def;
 
 static float gCylinderData[] = {
 	1.0f,0.0f,1.0f,1.0f,0.0f,1.0f,1.0f,0.0f,0.0f,1.0f,0.0f,0.0f,
@@ -263,6 +264,7 @@ namespace Snippets
 		glutSetWindow(mainHandle);
 		glutReshapeFunc(reshapeCallback);
 
+
 		delete[] namestr;
 	}
 
@@ -298,8 +300,10 @@ namespace Snippets
 
 		// Display text
 		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-		for (int i = 0; i < 2; ++i)
-			drawText(displayTexts[i], 0, 2 * 10 - 10 * i);
+		/*for (int i = 0; i < 2; ++i)
+			drawText(displayTexts[i], 0, 2 * 10 - 10 * i);*/
+		
+		drawText(display_text, 10, 10);
 
 		// Setup camera
 		glMatrixMode(GL_PROJECTION);
@@ -408,7 +412,7 @@ namespace Snippets
 		int length = text.length();
 
 		for (int i = 0; i < length; i++) {
-			glutBitmapCharacter(GLUT_BITMAP_9_BY_15, (int)text[i]);
+			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, (int)text[i]);
 		}
 		glPopMatrix();
 		glMatrixMode(GL_PROJECTION);
