@@ -1,8 +1,8 @@
-# SimulacionFisicaVideojuegos
-Repositorio de las prácticas de la asignatura de Simulación Física de Videojuegos
 
-En la carpeta skeleton estará vuestro código fuente
+# Objetivo
+El objetivo principal del juego es controlar una pequeña bola que avanza constantemente hacia adelante, con la tarea de llegar con éxito a la meta. A lo largo del recorrido, se encuentran obstáculos de dos colores diferentes que se pueden empujar. La bola solo puede colisionar con objetos del mismo color. En caso contrario, el jugador perderá la partida y se le requerirá comenzar desde el inicio.
 
-Necesitaréis además descomprimir el archivo que se indica a continuación en la raíz del repositorio:
-
-Carpetas bin y common https://ucomplutense-my.sharepoint.com/:u:/g/personal/davalejo_ucm_es/EZcsdyIoqTFOrF4hdfkVYk0BJZ9IycJ3QqXQFwaXVrlSKg?e=pfs6IO
+# Controles
+- Ratón/ WASD: aplicar fuerza a la bola en direcciones análogas.
+- SPACE:empezar la partida una vez cargada.
+- R: reiniciar la partida cuando gana o pierde.

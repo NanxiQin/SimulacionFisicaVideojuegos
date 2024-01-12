@@ -35,7 +35,7 @@ void GameScene::initGame()
 	//Adjust Camera's vision
 	GetCamera()->setEye(player->getPos() + Vector3(0, 300, -100));
 	GetCamera()->setDir(player->getPos() - GetCamera()->getEye());
-	GetCamera()->setEye(GetCamera()->getEye() + Vector3(0, 0, 100));
+	GetCamera()->setEye(GetCamera()->getEye() + Vector3(0, 0, 130));
 
 	//Create Road...........................................................................
 	//Ground
@@ -59,7 +59,7 @@ void GameScene::initGame()
 	rightWall->setColor(colorRGB[Black]);
 
 	roadSys->addParticles({ backWall = new StaticRigidBody(particleProperties[STATIC], gPhysics->createMaterial(0.5f, 0.5f, 0.0f),filterDataBackWall, PxGeometryType::eBOX, { 140,20,10 }) });
-	backWall->setPos({ 0,0,GetCamera()->getEye().z - 60 });
+	backWall->setPos({ 0,0,GetCamera()->getEye().z - 100 });
 
 }
 
@@ -99,14 +99,6 @@ void GameScene::loadMap(const string& file)
 		for (int column = 0; column < columns; ++column, ++stringIndex) {
 			switch (actualRow[stringIndex]) {
 			case '-':break; //empty
-			case 'o': //BigSphere
-				radius = 10;
-				stringIndex++;
-				color = atoi(&actualRow[stringIndex]);
-				color == 0 ? color = COLOR1 : color = COLOR2;
-				rigidBodySys->addParticles({ aux = new DynamicRigidBody({ PxTransform(-(column * (cellWidth)-posWidth + cellWidth / 2.0),0,-(row * (cellWidth)-posLength + cellWidth / 2.0)),{ 0,0,0 },0.8,2,radius,colorRGB[color],-1,0,NONE }) });
-				actorMap.insert({ aux->getActor(),aux });
-				break;
 			case '.'://SmallSphere
 				radius = 4;
 				stringIndex++;
@@ -117,11 +109,19 @@ void GameScene::loadMap(const string& file)
 				actorMap.insert({ aux->getActor(),aux });
 				break;
 
+			case 'o': //BigSphere
+				radius = 10;
+				stringIndex++;
+				color = atoi(&actualRow[stringIndex]);
+				color == 0 ? color = COLOR1 : color = COLOR2;
+				rigidBodySys->addParticles({ aux = new DynamicRigidBody({ PxTransform(-(column * (cellWidth)-posWidth + cellWidth / 2.0),0,-(row * (cellWidth)-posLength + cellWidth / 2.0)),{ 0,0,0 },0.8,4,radius,colorRGB[color],-1,0,NONE }) });
+				actorMap.insert({ aux->getActor(),aux });
+				break;
 			case 'b'://SmallCube
 				stringIndex++;
 				color = atoi(&actualRow[stringIndex]);
 				color == 0 ? color = COLOR1 : color = COLOR2;
-				rigidBodySys->addParticles({ aux = new DynamicRigidBody({ PxTransform(-(column * (cellWidth)-posWidth + cellWidth / 2.0),3,-(row * (cellWidth)-posLength + cellWidth / 2.0)),{ 0,0,0 },0.8,2,radius,colorRGB[color],-1,0,NONE },true,nullptr,GeometryType::eBOX,{3,3,3}) });
+				rigidBodySys->addParticles({ aux = new DynamicRigidBody({ PxTransform(-(column * (cellWidth)-posWidth + cellWidth / 2.0),3,-(row * (cellWidth)-posLength + cellWidth / 2.0)),{ 0,0,0 },0.8,3,radius,colorRGB[color],-1,0,NONE },true,nullptr,GeometryType::eBOX,{3,3,3}) });
 
 				actorMap.insert({ aux->getActor(),aux });
 				break;
@@ -130,7 +130,7 @@ void GameScene::loadMap(const string& file)
 				stringIndex++;
 				color = atoi(&actualRow[stringIndex]);
 				color == 0 ? color = COLOR1 : color = COLOR2;
-				rigidBodySys->addParticles({ aux = new DynamicRigidBody({ PxTransform(-(column * (cellWidth)-posWidth + cellWidth / 2.0),7,-(row * (cellWidth)-posLength + cellWidth / 2.0)),{ 0,0,0 },0.8,2,radius,colorRGB[color],-1,0,NONE },true,nullptr,GeometryType::eBOX,{7,7,7}) });
+				rigidBodySys->addParticles({ aux = new DynamicRigidBody({ PxTransform(-(column * (cellWidth)-posWidth + cellWidth / 2.0),7,-(row * (cellWidth)-posLength + cellWidth / 2.0)),{ 0,0,0 },0.8,5,radius,colorRGB[color],-1,0,NONE },true,nullptr,GeometryType::eBOX,{7,7,7}) });
 
 				actorMap.insert({ aux->getActor(),aux });
 				break;
@@ -139,7 +139,7 @@ void GameScene::loadMap(const string& file)
 				stringIndex++;
 				color = atoi(&actualRow[stringIndex]);
 				color == 0 ? color = COLOR1 : color = COLOR2;
-				rigidBodySys->addParticles({ aux = new DynamicRigidBody({ PxTransform(-(column * (cellWidth)-posWidth + cellWidth / 2.0),7,-(row * (cellWidth)-posLength + cellWidth / 2.0)),{ 0,0,0 },0.8,5,radius,colorRGB[color],-1,0,NONE },true,nullptr,GeometryType::eBOX,{30,7,7}) });
+				rigidBodySys->addParticles({ aux = new DynamicRigidBody({ PxTransform(-(column * (cellWidth)-posWidth + cellWidth / 2.0),7,-(row * (cellWidth)-posLength + cellWidth / 2.0)),{ 0,0,0 },0.8,5,radius,colorRGB[color],-1,0,NONE },true,nullptr,GeometryType::eBOX,{30,7,7},{0,1000,0}) });
 
 				actorMap.insert({ aux->getActor(),aux });
 				break;
@@ -155,7 +155,7 @@ void GameScene::loadMap(const string& file)
 				Vector3 anchoredPos = Vector3(-(column * (cellWidth)-posWidth + cellWidth / 2.0), 0, -(row * (cellWidth)-posLength + cellWidth / 2.0));
 				Vector3 spherePos = anchoredPos + direction * Vector3(8 * cellWidth, 0, 0);
 
-				rigidBodySys->addParticles({ aux = new DynamicRigidBody({ PxTransform(spherePos),{ 0,0,0 },0,1,radius,colorRGB[color],-1,0,NONE },true, nullptr, GeometryType::eSPHERE, Vector3(0), Vector3(-1), filterDataSpring) });
+				rigidBodySys->addParticles({ aux = new DynamicRigidBody({ PxTransform(spherePos),{ 0,0,0 },0,2,radius,colorRGB[color],-1,0,NONE },true, nullptr, GeometryType::eSPHERE, Vector3(0), Vector3(-1), filterDataSpring) });
 				rigidBodySys->addForcetoParticle(rigidBodySys->createForceGenerators<AnchoredSpringForceGenerator>(10, 13 * cellWidth, anchoredPos), aux);
 				aux->getActor()->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, true);
 				actorMap.insert({ aux->getActor(),aux });
@@ -175,7 +175,7 @@ void GameScene::loadMap(const string& file)
 		}
 	}
 	metaPos = { 0, 7,(float)posLength+100 };
-	roadSys->addParticles({ new StaticRigidBody({ PxTransform(0,7,posLength + 250),{ 0,0,0 },0.8,2,radius,colorRGB[Black],-1,0,NONE },gPhysics->createMaterial(0.5f, 0.5f, 0.0f),filterDataTrigger, PxGeometryType::eBOX, { (float)roadWidth,100,100})});
+	roadSys->addParticles({ new StaticRigidBody({ PxTransform(0,7,posLength + 300),{ 0,0,0 },0.8,2,radius,colorRGB[Black],-1,0,NONE },gPhysics->createMaterial(0.5f, 0.5f, 0.0f),filterDataTrigger, PxGeometryType::eBOX, { (float)roadWidth,100,100})});
 }
 
 void GameScene::update(double t)
@@ -282,7 +282,7 @@ void GameScene::onPlaying()
 	constrail->setOrigin(player->getPos() + Vector3(-5, 0, -10));
 	constrail->setMeanVelocity(-player->getVel().getNormalized());
 	//move backwall
-	backWall->setPos({ 0,0,GetCamera()->getEye().z - 60 });
+	backWall->setPos({ 0,0,GetCamera()->getEye().z - 71 });
 	//update DeadZone
 	rigidBodySys->setparticleBoundDistance(Vector3(-1.5 * ROAD_WIDTH, -100, GetCamera()->getEye().z - 100), Vector3(1.5 * ROAD_WIDTH, 100, roadLength + 400));
 	particleSys->setparticleBoundDistance(Vector3(-1.5 * ROAD_WIDTH, -500, GetCamera()->getEye().z - 100), Vector3(1.5 * ROAD_WIDTH, 400, roadLength + 600));

@@ -11,7 +11,6 @@ class GameScene : public Scene
 	enum State{ preparing,pausing,playing,restart,win,lose};
 public:
 	GameScene();
-
 	void update(double t) override;
 	void handleMouse(int button, int state, int x, int y) override;
 	virtual void keyPress(unsigned char key);

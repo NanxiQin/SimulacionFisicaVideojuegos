@@ -15,7 +15,7 @@ void SpringForceGenerator::updateForce(Particle* p, double t)
 
 	if (deltaX > maxLength) { //muelle roto
 		alive = false;
-		cout << "Spring broken\n ";;
+		//cout << "Spring broken\n ";;
 		return;
 	}
 

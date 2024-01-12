@@ -20,8 +20,10 @@ public:
 	// Creates a void system with a det. gravity
 	ParticleSystem(Scene* scene, const Vector3& g = { 0.0f, GRAVITY, 0.0f });
 	virtual ~ParticleSystem();
+	
 	// Integrates the particles and checks for its lifetime, etc!
 	void update(double t) override;
+
 	virtual void refresh();
 	virtual void keyPress(unsigned char key) ;
 	virtual void keyRelease(unsigned char key) ;
@@ -29,27 +31,28 @@ public:
 	virtual void handleMotion(int x, int y);
 	virtual void handleMouse(int button, int state, int x, int y);
 
-	virtual void addParticles(list<Particle*>particlesList);
+	void setparticleBoundDistance(Vector3 d) { particleMaxBoundDistance= particleMinBoundDistance = d; };
+	void setparticleBoundDistance(Vector3 min, Vector3 max) { particleMaxBoundDistance = max; particleMinBoundDistance = min;};
+
 	virtual void addGravity(Particle* particle);
 	virtual void addFloating(Particle* particle);
 
 	void createFireworkGenerators();
 	void generateFirework(bool randomColor, int maxGen, int gen,Vector3 pos,Vector3 dir);
 
-	void addForcetoParticle(ForceGenerator* fg, Particle* p);
-	void setparticleBoundDistance(Vector3 d) { particleMaxBoundDistance= particleMinBoundDistance = d; };
-	void setparticleBoundDistance(Vector3 min, Vector3 max) { particleMaxBoundDistance = max; particleMinBoundDistance = min;};
-
+	virtual void addParticles(list<Particle*>particlesList);
 	void addForcetoAllParticles(list <ForceGenerator*> fg);
-
-
-	void deleteAllParticleGenerators();
-	void deleteParticleGenerator(ParticleGenerator* gen);
-	void deleteForceGenerator(ForceGenerator* fg);
+	void addForcetoParticle(ForceGenerator* fg, Particle* p);
 	void addForcetoAllParticlegenerators(list <ForceGenerator*> fg);
 
 	void deregisterForceGenerator(ForceGenerator* fg);
 	void deregisterForceGeneratorFromGen(ForceGenerator* fg, ParticleGenerator* gen);
+
+	void deleteAllParticleGenerators();
+	void deleteParticleGenerator(ParticleGenerator* gen);
+	void deleteForceGenerator(ForceGenerator* fg);
+
+	
 	template<class T>
 	inline T* createGenerator(bool addTolist, GeneratorEffectType type = DefaultEffect, Vector3 pos = { 0,0,0 }, Color color = COLOR_SIZE, DistributionProp distribution = generatorEffect[DefaultEffect].distribution,double minLife=-2,double maxLife=-2) {
 		GeneratorEffectProperties g = generatorEffect[type];
@@ -81,21 +84,19 @@ protected:
 	bool hasGravity;
 	Vector3 gravity;
 
-	ShooterManager* shooter;
 
-	// These are the registred generators(for on demand set generation prob.to 0)
-	list <ParticleGenerator*> particleGenerators;
 	list <Particle*> particles;
+	list <ParticleGenerator*> particleGenerators;
+	list <ForceGenerator*> forceGenerators;
 
-	//Force
 	ParticleForceRegistry* forceRegistry;
 
-	list <ForceGenerator*> forceGenerators;
 	GravityForceGenerator* gravityForce;
 	GravityForceGenerator* floatingForce;
 
-	// This generator is only to shoot the firework
+	ShooterManager* shooter;
 	vector< ParticleGenerator*>firework_generators;
+
 	Vector3 particleMaxBoundDistance;
 	Vector3 particleMinBoundDistance;
 
@@ -106,11 +107,8 @@ protected:
 	template <typename T>
 	void initFirework(double prob, int nParticle);
 
-
-
 	//! This is used currently in the Fireworks to spread more Fireworks!
 	void onParticleDeath(Particle* p);
-
 
 	inline bool isOutOfBounds(const Vector3& pos) const {
 		return
@@ -118,7 +116,6 @@ protected:
 			pos.y > particleMaxBoundDistance.y || pos.y < particleMinBoundDistance.y||
 			pos.z > particleMaxBoundDistance.z || pos.z < particleMinBoundDistance.z;
 	}
-
 
 	void conversionUniformToGaussian(DistributionProp& d) {
 		d.x.first = (d.x.first + d.x.second) / 2; //conversión de min a media

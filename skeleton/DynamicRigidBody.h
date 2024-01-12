@@ -7,6 +7,7 @@ public:
 	~DynamicRigidBody() { die(); };
 	void die() override;
 	virtual DynamicRigidBody* clone(bool render = true)const;
+	
 	void createNewRenderItem();;
 	void registerRender()override;
 	

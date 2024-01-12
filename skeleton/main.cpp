@@ -57,8 +57,6 @@ PxFilterFlags CustomFilterShader(
 		(filterData0.word0 == CollisionGroupPlayer && filterData1.word0 == CollisionGroupGround) ||
 		(filterData0.word0 == CollisionGroupGround && filterData1.word0 == CollisionGroupOther) ||
 		(filterData0.word0 == CollisionGroupOther && filterData1.word0 == CollisionGroupGround) ||
-		//(filterData0.word0 == CollisionGroupSpring && filterData1.word0 == CollisionGroupOther) ||
-		//(filterData0.word0 == CollisionGroupOther && filterData1.word0 == CollisionGroupSpring) ||
 		(filterData0.word0 == CollisionGroupSpring && filterData1.word0 == CollisionGroupPlayer) ||
 		(filterData0.word0 == CollisionGroupPlayer && filterData1.word0 == CollisionGroupSpring) ||
 		(filterData0.word0 == CollisionGroupOther && filterData1.word0 == CollisionGroupPlayer) ||
@@ -70,20 +68,9 @@ PxFilterFlags CustomFilterShader(
 			| physx::PxPairFlag::eNOTIFY_CONTACT_POINTS;  // Define collision behavior
 		return physx::PxFilterFlag::eDEFAULT; // Return flags indicating collision is allowed
 	}
-	else if
-		((filterData0.word0 == CollisionGroupPlayer && filterData1.word0 == CollisionGroupTrigger) ||
-			(filterData0.word0 == CollisionGroupTrigger && filterData1.word0 == CollisionGroupPlayer))
-	{
-		pairFlags = PxPairFlag::eSOLVE_CONTACT
-			| physx::PxPairFlag::eDETECT_DISCRETE_CONTACT
-			| physx::PxPairFlag::eNOTIFY_TOUCH_FOUND
-			| physx::PxPairFlag::eNOTIFY_TOUCH_PERSISTS
-			| physx::PxPairFlag::eNOTIFY_CONTACT_POINTS;  // Define collision behavior
-		physx::PxPairFlag::eNOTIFY_TOUCH_FOUND;
-		return physx::PxFilterFlag::eDEFAULT; // Return flags indicating collision is allowed
-	}
+
 	// For other combinations, disable collision
-	pairFlags = PxPairFlag::eTRIGGER_DEFAULT;
+	//pairFlags = PxPairFlag::eTRIGGER_DEFAULT;
 	return physx::PxFilterFlag::eKILL;
 
 }

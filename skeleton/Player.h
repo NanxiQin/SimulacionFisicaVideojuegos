@@ -21,7 +21,7 @@ private:
 		double y;
 	};
 	GameScene* scene;
-	Vector2 originForce; //mouse pos
+	Vector2 mouseLastPos; //mouse pos
 	char keyPressed;
 	Vector3 metaPos;
 	bool active;
