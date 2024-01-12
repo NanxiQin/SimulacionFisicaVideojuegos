@@ -22,7 +22,7 @@ void GameScene::initGame()
 	//Entities' DeadZone
 	rigidBodySys->setparticleBoundDistance(Vector3(-1.5 * ROAD_WIDTH, -100, GetCamera()->getEye().z - 100), Vector3(1.5 * ROAD_WIDTH, 100, roadLength + 400));
 	particleSys->setparticleBoundDistance(Vector3(-1.5 * ROAD_WIDTH, -100, GetCamera()->getEye().z - 100), Vector3(1.5 * ROAD_WIDTH, 100, roadLength + 400));
-	roadSys->setparticleBoundDistance(Vector3(-1.5 * ROAD_WIDTH, -100, -roadLength-400), Vector3(1.5 * ROAD_WIDTH, 100, roadLength + 400));
+	roadSys->setparticleBoundDistance(Vector3(-1.5 * ROAD_WIDTH, -100, -roadLength - 400), Vector3(1.5 * ROAD_WIDTH, 100, roadLength + 400));
 
 	//Player................................................................................
 	//Create Player
@@ -41,10 +41,10 @@ void GameScene::initGame()
 	//Ground
 	StaticRigidBody* ground;
 
-	double eachLength = (roadLength+2*FINAL_LENGTH) / 10.0;
+	double eachLength = (roadLength + 2 * FINAL_LENGTH) / 10.0;
 	for (int i = 0; i < 10; ++i) {
-	roadSys->addParticles({ ground = new StaticRigidBody(particleProperties[STATIC], gPhysics->createMaterial(0, 0, 0) ,filterDataGround, PxGeometryType::eBOX, { ROAD_WIDTH,1,(float)((eachLength)/2.0)}) });
-	ground->setPos({ 0,-0.2,(float)(eachLength*i- INIT_LENGTH) });
+		roadSys->addParticles({ ground = new StaticRigidBody(particleProperties[STATIC], gPhysics->createMaterial(0, 0, 0) ,filterDataGround, PxGeometryType::eBOX, { ROAD_WIDTH,1,(float)((eachLength) / 2.0)}) });
+		ground->setPos({ 0,-0.2,(float)(eachLength * i - INIT_LENGTH) });
 	}
 	//roadSys->addParticles({ ground = new StaticRigidBody(particleProperties[STATIC], gPhysics->createMaterial(0, 0, 0) ,filterDataGround, PxGeometryType::eBOX, { ROAD_WIDTH,1,(float)roadLength}) });
 	//ground->setPos({ 0,0,(float)(((roadLength / 2.0 - INIT_LENGTH))*2)});
@@ -53,7 +53,7 @@ void GameScene::initGame()
 	roadSys->addParticles({ leftWall = new StaticRigidBody(particleProperties[STATIC], nullptr,filterDataOther, PxGeometryType::eBOX, { 10,20,(float)roadLength}) });
 	leftWall->setPos({ ROAD_WIDTH,0,(float)(roadLength / 2.0 - INIT_LENGTH) });
 	leftWall->setColor(colorRGB[Black]);
-	
+
 	roadSys->addParticles({ rightWall = new StaticRigidBody(particleProperties[STATIC], nullptr,filterDataOther, PxGeometryType::eBOX, { 10,20,(float)roadLength}) });
 	rightWall->setPos({ -ROAD_WIDTH,0,(float)(roadLength / 2.0 - INIT_LENGTH) });
 	rightWall->setColor(colorRGB[Black]);
@@ -174,8 +174,8 @@ void GameScene::loadMap(const string& file)
 
 		}
 	}
-	metaPos = { 0, 7,(float)posLength+100 };
-	roadSys->addParticles({ new StaticRigidBody({ PxTransform(0,7,posLength + 300),{ 0,0,0 },0.8,2,radius,colorRGB[Black],-1,0,NONE },gPhysics->createMaterial(0.5f, 0.5f, 0.0f),filterDataTrigger, PxGeometryType::eBOX, { (float)roadWidth,100,100})});
+	metaPos = { 0, 7,(float)posLength + 100 };
+	roadSys->addParticles({ new StaticRigidBody({ PxTransform(0,7,posLength + 300),{ 0,0,0 },0.8,2,radius,colorRGB[Black],-1,0,NONE },gPhysics->createMaterial(0.5f, 0.5f, 0.0f),filterDataTrigger, PxGeometryType::eBOX, { (float)roadWidth,100,100}) });
 }
 
 void GameScene::update(double t)
@@ -197,7 +197,7 @@ void GameScene::update(double t)
 		Scene::update(t);
 		break;
 	case win:shootFireworks(); Scene::update(t); break;
-	case lose:Scene::update(t);break;
+	case lose:Scene::update(t); break;
 	default:
 		break;
 	}
@@ -208,17 +208,17 @@ void GameScene::onCollision(physx::PxActor* actor1, physx::PxActor* actor2)
 {
 	switch (state)
 	{
-	case playing:player->onCollision(actor1, actor2);break;
+	case playing:player->onCollision(actor1, actor2); break;
 	}
 }
 
 void GameScene::handleMouse(int button, int state, int x, int y)
 {
-	
+
 	switch (state)
 	{
 
-	case preparing:case pausing:case playing:Scene::handleMouse(button, state, x, y);break;
+	case preparing:case pausing:case playing:Scene::handleMouse(button, state, x, y); break;
 	}
 
 	//GetCamera()->handleMouse(button, state, x, y);
@@ -226,10 +226,10 @@ void GameScene::handleMouse(int button, int state, int x, int y)
 
 void GameScene::handleMotion(int x, int y)
 {
-	
+
 	switch (state)
 	{
-	case preparing:case pausing:case playing:Scene::handleMotion(x, y);break;
+	case preparing:case pausing:case playing:Scene::handleMotion(x, y); break;
 	}
 	//GetCamera()->handleMotion(x, y);
 }
@@ -239,12 +239,14 @@ void GameScene::keyPress(unsigned char key)
 	switch (state)
 	{
 	case preparing:break;
-	case pausing:if (key == ' ')  
-		state = playing;
-		player->setActive();
-		display_text = " ";
+	case pausing:
+		if (key == ' ') {
+			state = playing;
+			player->setActive();
+			display_text = " ";
+		}
 		break;
-	case playing:Scene::keyPress(key);break;
+	case playing:Scene::keyPress(key); break;
 	case win:case lose: if (key == 'r')onRestart(); break;
 	}
 }
@@ -254,7 +256,7 @@ void GameScene::onPlayerLose()
 	state = lose;
 	display_text = "You Lose! Press 'R' to restart";
 	particleSys->deleteParticleGenerator(constrail);
-	rigidBodySys->addForcetoAllParticles({ rigidBodySys->createForceGenerators<ExplosionForceGenerator>(player->getPos(), 200, 40000, 0.5)});
+	rigidBodySys->addForcetoAllParticles({ rigidBodySys->createForceGenerators<ExplosionForceGenerator>(player->getPos(), 200, 40000, 0.5) });
 }
 
 void GameScene::onPlayerWin()
@@ -290,7 +292,7 @@ void GameScene::onPlaying()
 
 void GameScene::shootFireworks()
 {
-	particleSys->generateFirework(true, 3, 2, Vector3(-100, -0, metaPos.z+10), Vector3(1, 1, 0));
+	particleSys->generateFirework(true, 3, 2, Vector3(-100, -0, metaPos.z + 10), Vector3(1, 1, 0));
 	particleSys->generateFirework(true, 3, 2, Vector3(0, -0, metaPos.z + 10), Vector3(0, 1, 0));
 	particleSys->generateFirework(true, 3, 2, Vector3(100, -0, metaPos.z + 10), Vector3(-1, 1, 0));
 }
