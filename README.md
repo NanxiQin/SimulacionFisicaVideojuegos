@@ -1,8 +1,12 @@
-
-# Objetivo
-El objetivo principal del juego es controlar una pequeña bola que avanza constantemente hacia adelante, con la tarea de llegar con éxito a la meta. A lo largo del recorrido, se encuentran obstáculos de dos colores diferentes que se pueden empujar. La bola solo puede colisionar con objetos del mismo color. En caso contrario, el jugador perderá la partida y se le requerirá comenzar desde el inicio.
-
-# Controles
-- Ratón/ WASD: aplicar fuerza a la bola en direcciones análogas.
-- SPACE:empezar la partida una vez cargada.
-- R: reiniciar la partida cuando gana o pierde.
+## Introduction
+This project involves creating a physics engine for video games using NVIDIA PhysX in C++. 
+It incorporates various advanced physics simulations and techniques to enhance the realism and interaction within the game. Such as collision matrix particle systems, force generators, tensors, ...
+## Release
+https://github.com/NanxiQin/SimulacionFisicaVideojuegos/releases
+## Report
+![1](/memory/FISICA_page-0001.jpg "1")
+![1](/memory/FISICA_page-0002.jpg "1")
+![1](/memory/FISICA_page-0003.jpg "1")
+![1](/memory/FISICA_page-0004.jpg "1")
+![1](/memory/FISICA_page-0005.jpg "1")
+![1](/memory/FISICA_page-0006.jpg "1")
